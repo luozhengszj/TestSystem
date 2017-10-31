@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/design_view_point"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="库名" />
+
+        <EditText
+            android:id="@+id/etlibraryname"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:background="@drawable/text_view_border"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="输入题库名称(十个汉字以内)"
+            android:maxLength="10"
+            android:textSize="12dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/design_view_point"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="单选" />
+
+        <EditText
+            android:id="@+id/etsinglenum"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:gravity="center"
+            android:hint="试卷题数"
+            android:focusable="false"
+            android:maxLength="3"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/etsinglesorce"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="单题分值"
+            android:maxLength="2"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/design_view_point"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="多选" />
+
+        <EditText
+            android:id="@+id/etmultiplenum"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="试卷题数"
+            android:focusable="false"
+            android:maxLength="3"
+            android:textSize="12dp" />
+        <EditText
+            android:id="@+id/etmultiplesorce"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="单题分值"
+            android:focusable="false"
+            android:maxLength="2"
+            android:textSize="12dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/design_view_point"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="判断" />
+
+        <EditText
+            android:id="@+id/etjudgenum"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="试卷题数"
+            android:maxLength="3"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/etjudgesorce"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="10"
+            android:numeric="integer"
+            android:background="@drawable/text_view_border"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="单题分值"
+            android:focusable="false"
+            android:maxLength="2"
+            android:textSize="12dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnmakelibrarydefault"
+            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:background="#B2DFEE"
+            android:textSize="20dp"
+            android:text="默认"/>
+        <Button
+            android:id="@+id/btnmakelibraryok"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:background="#97cbff"
+            android:textSize="20dp"
+            android:text="确定"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="0.3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TestSystem</string>
+    <string name="testdrawer_open">Drawer Open</string>
+    <string name="testdrawer_close">Drawer Close</string>
+</resources>

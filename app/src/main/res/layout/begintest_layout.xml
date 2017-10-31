@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/testdrawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/dl_questionlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvquestiontruetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:gravity="end"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/heise"
+                    android:visibility="gone"
+                    android:textSize="18dp"
+                    android:text="正确为："/>
+                <TextView
+                    android:id="@+id/tvquestiontrue"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:gravity="end"
+                    android:paddingRight="15dp"
+                    android:textColor="@color/heise"
+                    android:visibility="gone"
+                    android:textSize="18dp" />
+                <TextView
+                    android:id="@+id/tvquestionlist"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:gravity="end"
+                    android:paddingRight="15dp"
+                    android:textColor="@color/heise"
+                    android:textSize="18dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvtopic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:maxLines="8"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/heise"
+                    android:textSize="16dp"
+                    android:typeface="monospace" />
+
+                <RadioGroup
+                    android:id="@+id/rgquestionsingle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbars="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rbquestionsingle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_a"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <RadioButton
+                        android:id="@+id/rbquestionsingle2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_b"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <RadioButton
+                        android:id="@+id/rbquestionsingle3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_c"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <RadioButton
+                        android:id="@+id/rbquestionsingle4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_d"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/rgquestionjedge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbars="vertical"
+                    android:visibility="gone">
+
+                    <RadioButton
+                        android:id="@+id/rbquestionjedge1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_true"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <RadioButton
+                        android:id="@+id/rbquestionjedge2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_false"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+                </RadioGroup>
+
+                <LinearLayout
+                    android:id="@+id/layoutcheck"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <!--android:visibility="gone" />-->
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_a"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_b"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_c"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_d"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_e"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+
+                    <CheckBox
+                        android:id="@+id/cbquestionmultiple6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/radio_selector_f"
+                        android:orientation="vertical"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/heise" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/btnabovetquestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:text="上一题" />
+                <CheckBox
+                    android:id="@+id/cbcollect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:button="@null"
+                    android:background="@drawable/radio_selector_collect"
+                    android:layout_marginLeft="15dp" />
+                <Button
+                    android:id="@+id/btnnextquestion"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="下一题" />
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+    <!--  the navigation view -->
+    <ListView
+        android:id="@+id/test_drawer"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/lanse"
+        android:choiceMode="singleChoice"
+        android:divider="#ffffff"
+        android:dividerHeight="1px"
+        ></ListView>
+</android.support.v4.widget.DrawerLayout>
