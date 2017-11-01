@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="vertical">
-
-        <LinearLayout
+    <LinearLayout
             android:id="@+id/laymiantop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -28,22 +27,6 @@
                 android:gravity="center"
                 android:textSize="20sp" />
         </LinearLayout>
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/mianprogressbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ProgressBar
-            android:max="100"
-            android:progress="20"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pbmakelibrary"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dip"
@@ -72,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="2"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:layout_rowSpan="2"
                 android:background="@null"
@@ -149,7 +132,10 @@
                 android:layout_weight="1"
                 android:columnCount="1"
                 android:rowCount="2">
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dip"
+                    android:background="@color/line_color" />
                 <Button
                     android:layout_columnWeight="1"
                     android:layout_gravity="center"
@@ -186,6 +172,10 @@
                 android:columnCount="1"
                 android:rowCount="2">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dip"
+                    android:background="@color/line_color" />
                 <Button
                     android:id="@+id/btninputlibrary"
                     android:layout_columnWeight="1"
@@ -222,7 +212,10 @@
                 android:layout_weight="1"
                 android:columnCount="1"
                 android:rowCount="2">
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dip"
+                    android:background="@color/line_color" />
                 <Button
                     android:layout_columnWeight="1"
                     android:layout_gravity="center"
@@ -259,8 +252,11 @@
             android:layout_weight="1.8"
             android:divider="@drawable/layout_line">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/img_loading"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 </LinearLayout>

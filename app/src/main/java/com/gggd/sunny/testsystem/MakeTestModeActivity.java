@@ -274,6 +274,7 @@ public class MakeTestModeActivity extends TitleActivity {
                 insertQuestionDB.insertMultipleQuestion(library, multipleset);
             if (!library.getJudge_num().equals(""))
                 insertQuestionDB.insertJudgeQuestion(library, judgeset);
+            insertQuestionDB.dbClose();
         } else {
             Toast.makeText(this, "导入失败存在单份某类题目大于该类总数！", Toast.LENGTH_SHORT).show();
             flagmax = 0;

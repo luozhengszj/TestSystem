@@ -23,7 +23,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "\"multiple_num\"  CHAR(3)," +
             "\"judge_num\"  CHAR(3)," +
             "\"score\"  CHAR(3)," +
-            "\"time\"  TEXT(20),question_id INTEGER);";
+            "\"time\"  TEXT(20));";
     private static final String CREATE_QUESTION_TABLE = "CREATE TABLE \"question\" (" +
             "\"id\"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
             "\"library_num\"  CHAR(1) NOT NULL," +
@@ -38,7 +38,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "\"option_t\"  CHAR(1) NOT NULL," +
             "\"answer\"  CHAR(1)," +
             "\"score\"  INTEGER," +
-            "\"test_id\"  INTEGER,collect_flag CHAR(1),wrong_flag INTEGER)";
+            "\"test_id\"  INTEGER,wrong_flag INTEGER,question_id INTEGER)";
+    private static final  String CREATE_COLLECTION_TABLE = "CREATE TABLE \"collect_wrong\" (" +
+            "\"question_id\"  INTEGER," +
+            "\"wrong_flag\"  CHAR(1) ," +
+            "\"collect_flag\"  CHAR(1))";
 
     public DBOpenHelper(Context context) {
         super(context, CREATE_LIBRARY_NAME, null, VSERSION);
@@ -49,7 +53,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_LIBRARY_TABLE);
         db.execSQL(CREATE_QUESTION_TABLE);
-        Log.d("lz  db","onCreateDB OK!");;
+        Log.d("lz  db","onCreateDB OK!");
+        db.execSQL(CREATE_COLLECTION_TABLE);
     }
 
     @Override

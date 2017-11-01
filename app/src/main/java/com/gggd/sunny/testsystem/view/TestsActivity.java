@@ -256,7 +256,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         String selectTypeShowanswer = question.getAnswer();
         if(!flag)
             mtvquestiontrue.setText(question.getOption_t());
-        if (question.getCollect_flag().equals("1")) {
+        if ("1".equals(question.getCollect_flag())) {
             mcbncollectquestion.setChecked(true);
         } else {
             mcbncollectquestion.setChecked(false);
@@ -353,7 +353,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     }
     //不是做题的时候，是查看错题的时候，检查是否为收藏的题目
     public void isCollect(String collect_flag){
-        if(collect_flag.equals("1")){
+        if("1".equals(collect_flag)){
             mcbncollectquestion.setChecked(true);
         }else {
             mcbncollectquestion.setChecked(false);
@@ -479,7 +479,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     }
     //对于浏览题目时候的收藏，也要添加到数据库
     //两种退出都要收藏
-    public void updateCollect( ArrayList<Question> list){
+    public void updateCollect(ArrayList<Question> list){
         WrongAndCollectDB wrongAndCollectDB = new WrongAndCollectDB(this);
         wrongAndCollectDB.updateCollectQuestion(list);
     }

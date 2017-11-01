@@ -77,18 +77,18 @@ public class ShowGrageActivity extends TitleActivity {
         int falsenum = 0;
         int count = 0;
         falselist = new ArrayList<>();
-        for(Question q: list) {
-            if(q.getAnswer().equals(q.getOption_t())){
-                truenum++;
-                count = count + q.getScore();
-            }else{
-                falsenum++;
-                if(test_id != 0)
-                    q.setWrong_flag(1+q.getWrong_flag());
-                falselist.add(q);
+        //-----------------------------
+            for (Question q : list) {
+                if (q.getAnswer().equals(q.getOption_t())) {
+                    truenum++;
+                    count = count + q.getScore();
+                    q.setWrong_flag(0);
+                } else {
+                    falsenum++;
+                    q.setWrong_flag(1);
+                    falselist.add(q);
+                }
             }
-            Log.d("showlz",q.toString());
-        }
         if(test_id != 0) {
             Library library = new Library();
             library.setId(test_id);

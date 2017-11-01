@@ -65,7 +65,7 @@ public class Question implements Parcelable{
 
     public Question(int id, String type, String topic, String option_a, String option_b, String option_c,
                     String option_d, String option_e, String option_f, String option_t,String answer,
-                    int score,String collect_flag,int wrong_flag) {
+                    int score,int wrong_flag) {
         this.id = id;
         this.type = type;
         this.topic = topic;
@@ -78,7 +78,6 @@ public class Question implements Parcelable{
         this.option_t = option_t;
         this.answer = answer;
         this.score = score;
-        this.collect_flag = collect_flag;
         this.wrong_flag = wrong_flag;
     }
 

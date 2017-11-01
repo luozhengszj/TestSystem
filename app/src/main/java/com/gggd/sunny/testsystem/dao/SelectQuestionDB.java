@@ -38,14 +38,23 @@ public class SelectQuestionDB {
             String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
             String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
             String option_answer = cursor.getString(cursor.getColumnIndex("answer"));
-            String collect_flag = cursor.getString(cursor.getColumnIndex("collect_flag"));
             int wrong_flag = cursor.getInt(cursor.getColumnIndex("wrong_flag"));
             if(option_answer == null)
                 option_answer = "";
             int score =cursor.getInt(cursor.getColumnIndex("score"));
             Question question = new Question(id,type,topic,option_a,option_b,option_c,option_d,option_e,option_f,
-                    option_t,option_answer,score,collect_flag,wrong_flag);
+                    option_t,option_answer,score,wrong_flag);
             list.add(question);
+        }
+         String collectsql = "select collect_flag from collect_wrong where question_id=(select question_id from question where test_id=?)";
+         Cursor cursor1 = db.rawQuery(collectsql,new String[]{test_id});
+        int i = -1;
+        while (cursor1.moveToNext()){
+            i++;
+            String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
+            if(collect_flag == null)
+                collect_flag = "0";
+            list.get(i).setCollect_flag(collect_flag);
         }
         return list;
     }
