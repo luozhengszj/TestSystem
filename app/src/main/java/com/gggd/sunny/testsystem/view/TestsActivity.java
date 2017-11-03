@@ -25,7 +25,6 @@ import com.gggd.sunny.testsystem.MainActivity;
 import com.gggd.sunny.testsystem.R;
 import com.gggd.sunny.testsystem.TitleActivity;
 import com.gggd.sunny.testsystem.bean.Question;
-import com.gggd.sunny.testsystem.dao.WrongAndCollectDB;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,9 +38,6 @@ import java.util.List;
 public class TestsActivity extends TitleActivity implements RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener{
     private Button mbtnbutton_forward;
-    private Button mbtnbutton_back;
-    private TextView mtvquestiontruetext;
-    private TextView mtvquestiontrue;
 
     private Button mbtnabovetquestion;
     private Button mbtnnextquestion;
@@ -75,11 +71,10 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
 
     private int test_id;
     private String libraryname;
-    private int questionselect;
+    private int questionselect = -1;
     private int nownum;
     private int size;
     private Question questionnow;
-    private boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +116,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         mcbquestionmultiple6 = (CheckBox) findViewById(R.id.cbquestionmultiple6);
         mcbncollectquestion = (CheckBox) findViewById(R.id.cbcollect);
 
-        mtvquestiontrue = (TextView) findViewById(R.id.tvquestiontrue);
-
         checkBoxList = new ArrayList<>();
         checkBoxList.add(mcbquestionmultiple1);
         checkBoxList.add(mcbquestionmultiple2);
@@ -150,28 +143,10 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         //同时设置“交卷”为“返回”，返回（包括返回键）即返回到主页
         //test_id !=0的时候，说明是考试（在这里就是错题考试）
         selectTypeShow(list.get(0));
-        if(test_id == 0){
-            showBackwardView(true);
-            flag = false;
-            mbtnbutton_forward.setText("主页");
-            mtvquestiontruetext = (TextView) findViewById(R.id.tvquestiontruetext);
-            mbtnbutton_back = (Button) findViewById(R.id.button_backward);
-            mbtnbutton_back.setOnClickListener(this);
-            mtvquestiontrue.setText(list.get(0).getOption_t());
-            mtvquestiontruetext.setVisibility(View.VISIBLE);
-            mtvquestiontrue.setVisibility(View.VISIBLE);
-            isCollect(list.get(0).getCollect_flag());
-            cannotSelect();
-            arrayList = new ArrayList<>();
-            for(int i = 1; i<=size;i++){
-                arrayList.add(i+"  "+list.get(i-1).getAnswer());
-            }
-            adapter = new ArrayAdapter<>(TestsActivity.this, android.R.layout.simple_list_item_1, arrayList);
-            mlvquestionlist.setAdapter(adapter);
+        if(test_id == -2){
+            questionnow = list.get(0);
         }
-        else{
             showBackwardView(false);
-            flag = true;
             mbtnbutton_forward.setText("交卷");
             mrgquestionsingle.setOnCheckedChangeListener(this);
             mrgquestionjedge.setOnCheckedChangeListener(this);
@@ -204,7 +179,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 }
             };
             mdlquestionlist.setDrawerListener(mdbtoggle);
-        }
+
     }
 
     @Override
@@ -214,9 +189,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 if (nownum == 1) {
                     break;
                 } else {
-                    if(flag) {
-                        insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
-                    }
+                    insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
                     nownum = nownum - 1;
                     questionnow = list.get(nownum - 1);
                     mtvquestionlist.setText(nownum + "/" + size);
@@ -227,9 +200,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 if (nownum == size) {
                     break;
                 } else {
-                    if(flag) {
-                        insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
-                    }
+                    insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
                     nownum = nownum + 1;
                     questionnow = list.get(nownum - 1);
                     mtvquestionlist.setText(nownum + "/" + size);
@@ -237,16 +208,12 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                     break;
                 }
             case R.id.button_forward:
-                if(flag) {
-                    checkAnswer();
-                }else{
-                    updateCollect(list);
-                    Intent intent = new Intent(TestsActivity.this,MainActivity.class);
-                    startActivity(intent);
-                }
+                checkAnswer();
                 break;
             case R.id.button_backward:
-                super.onClick(v);
+                Intent it = new Intent(TestsActivity.this, MainActivity.class);
+                TestsActivity.this.startActivity(it);
+                this.onDestroy();
                 break;
         }
     }
@@ -254,8 +221,8 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     public void selectTypeShow(Question question) {
         String type = question.getType();
         String selectTypeShowanswer = question.getAnswer();
-        if(!flag)
-            mtvquestiontrue.setText(question.getOption_t());
+        mrgquestionjedge.clearCheck();
+        mrgquestionsingle.clearCheck();
         if ("1".equals(question.getCollect_flag())) {
             mcbncollectquestion.setChecked(true);
         } else {
@@ -264,7 +231,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         if (type.equals("1")) {
             mlayoutcheck.setVisibility(View.GONE);
             mrgquestionjedge.setVisibility(View.GONE);
-            mrgquestionsingle.clearCheck();
             mrgquestionsingle.setVisibility(View.VISIBLE);
             mtvtopic.setText(nownum + "." + question.getTopic());
             mrbquestionsingle1.setText(question.getOption_a());
@@ -283,7 +249,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         } else if (type.equals("3")) {
             mlayoutcheck.setVisibility(View.GONE);
             mrgquestionsingle.setVisibility(View.GONE);
-            mrgquestionjedge.clearCheck();
             mrgquestionjedge.setVisibility(View.VISIBLE);
             mtvtopic.setText(nownum + "." + question.getTopic());
             mrbquestionjedge1.setText(question.getOption_a());
@@ -304,7 +269,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             mcbquestionmultiple6.setChecked(false);
             mlayoutcheck.setVisibility(View.VISIBLE);
             mtvtopic.setText(nownum + "." + question.getTopic());
-
             mcbquestionmultiple1.setText(question.getOption_a());
             mcbquestionmultiple2.setText(question.getOption_b());
             mcbquestionmultiple3.setText(question.getOption_c());
@@ -351,29 +315,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         }
         list.get(questionnum).setAnswer(questionanswer);
     }
-    //不是做题的时候，是查看错题的时候，检查是否为收藏的题目
-    public void isCollect(String collect_flag){
-        if("1".equals(collect_flag)){
-            mcbncollectquestion.setChecked(true);
-        }else {
-            mcbncollectquestion.setChecked(false);
-        }
-    }
-    //查看题目（错题），禁止选项被动
-    public void cannotSelect(){
-        mcbquestionmultiple1.setEnabled(false);
-        mcbquestionmultiple2.setEnabled(false);
-        mcbquestionmultiple3.setEnabled(false);
-        mcbquestionmultiple4.setEnabled(false);
-        mcbquestionmultiple5.setEnabled(false);
-        mcbquestionmultiple6.setEnabled(false);
-        mrbquestionsingle1.setEnabled(false);
-        mrbquestionsingle2.setEnabled(false);
-        mrbquestionsingle3.setEnabled(false);
-        mrbquestionsingle4.setEnabled(false);
-        mrbquestionjedge1.setEnabled(false);
-        mrbquestionjedge2.setEnabled(false);
-    }
     //检查答案是否填完
     public void checkAnswer() {
         boolean f = true;
@@ -419,11 +360,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(flag) {
-                exit();
-            }else{
-                this.finish();
-            }
+            exit();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -443,12 +380,10 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(flag) {
-            insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
-        }
-        nownum = position + 1;
-        mtvquestionlist.setText(position + 1 + "/" + size);
-        selectTypeShow(list.get(position));
+        insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
+        nownum = position ;
+        mtvquestionlist.setText(position + "/" + size);
+        selectTypeShow(list.get(position-1));
     }
 
     //是否收藏，这是对
@@ -463,24 +398,16 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
 
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-        if (flag) {
-            int i = -1;
+        int i = -10;
             int radioButtonId;
             if (group.equals(mrgquestionsingle)) {
                 radioButtonId = mrgquestionsingle.getCheckedRadioButtonId();
                 i = mrgquestionsingle.indexOfChild(mrgquestionsingle.findViewById(radioButtonId));
-            } else {
+            } else if(group.equals(mrgquestionjedge)) {
                 radioButtonId = mrgquestionjedge.getCheckedRadioButtonId();
                 i = mrgquestionjedge.indexOfChild(mrgquestionjedge.findViewById(radioButtonId));
                 i = i + 7;
             }
             questionselect = i;
-        }
-    }
-    //对于浏览题目时候的收藏，也要添加到数据库
-    //两种退出都要收藏
-    public void updateCollect(ArrayList<Question> list){
-        WrongAndCollectDB wrongAndCollectDB = new WrongAndCollectDB(this);
-        wrongAndCollectDB.updateCollectQuestion(list);
     }
 }
