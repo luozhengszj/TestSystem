@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
     private Button mbtntestrecord;
     private Button mbtncollecttitle;
     private Button mbtnwrongtest;
+    private Button mbtnwrongtitle;
 
     private String libraryname;
 
@@ -55,6 +57,7 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
         btnbegintest = (Button) findViewById(R.id.btnbegintest);
         mbtntestrecord = (Button) findViewById(R.id.btntestrecord);
         mbtncollecttitle = (Button) findViewById(R.id.btncollecttitle);
+        mbtnwrongtitle = (Button) findViewById(R.id.btnwrongtitle);
         mbtnwrongtest = (Button) findViewById(R.id.btnwrongtest);
 
         verifyStoragePermissions(MainActivity.this);
@@ -74,6 +77,8 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
         mbtntestrecord.setOnClickListener(this);
         mbtncollecttitle.setOnClickListener(this);
         mbtnwrongtest.setOnClickListener(this);
+        mbtnwrongtitle.setOnClickListener(this);
+        mtvlibrarypercent.setOnClickListener(this);
     }
 
     @Override
@@ -87,12 +92,20 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
             case R.id.btnbegintest:
                 checkBeginTest();
                 break;
+            case R.id.tvpercent:
+                intent =new Intent(MainActivity.this,ShowTestsActivity.class);
+                intent.putExtra("libraryname",libraryname);
+                startActivity(intent);
+                break;
             case R.id.btntestrecord:
                 intent =new Intent(MainActivity.this,ShowTestsActivity.class);
                 intent.putExtra("libraryname",libraryname);
                 startActivity(intent);
                 break;
             case R.id.btncollecttitle:
+                break;
+            case R.id.btnwrongtest:
+                wrongTest();
                 break;
             default:
                 break;
@@ -121,6 +134,20 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
             startActivityForResult(intent, 100);
         }
     }
+    //错题考试，查找出错题试卷并且跳转到考试界面。
+    //点击开始考试
+    public void wrongTest(){
+        Intent intent;
+        SelectQuestionDB selectquestiondb = new SelectQuestionDB(this);
+        ArrayList<Question> wronglist = selectquestiondb.selectWrongQuestion(libraryname);
+        intent = new Intent(MainActivity.this, TestsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("questionlist", wronglist);
+        bundle.putInt("test_id",-2);
+        bundle.putString("libraryname",libraryname);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 100);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -144,4 +171,27 @@ public class MainActivity extends TitleActivity  implements View.OnClickListener
                     REQUEST_EXTERNAL_STORAGE);
         }
     }
+    //监听返回键
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private long clickTime = 0;
+
+    private void exit() {
+        if ((System.currentTimeMillis() - clickTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再次返回退出程序", Toast.LENGTH_SHORT).show();
+            clickTime = System.currentTimeMillis();
+        } else {
+            Intent intent = new Intent("com.gggd.sunny.activity");
+            intent.putExtra("closeAll", 1);
+            sendBroadcast(intent);//发送广播
+        }
+    }
+
 }

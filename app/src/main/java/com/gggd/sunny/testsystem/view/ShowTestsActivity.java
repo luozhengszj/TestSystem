@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.gggd.sunny.testsystem.R;
@@ -35,7 +34,6 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
     private String libraryname;
     private LibraryAndTestDB librarydb;
 
-    private Button mbtn_faward;
     private ListView listView;
 
     @Override
@@ -43,9 +41,7 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_tests_layout);
         setTitle("考试记录");
-        mbtn_faward = (Button) findViewById(R.id.button_forward);
-        mbtn_faward.setText("主页");
-
+        showForwardView(false);
         Intent intent = getIntent();
         libraryname = intent.getStringExtra("libraryname");
         listView = (ListView) findViewById(R.id.lvshowtests);               //获取id是list的ListView
@@ -60,11 +56,11 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
     private ArrayList<Map<String, String>> initAdapter() {
         librarydb = new LibraryAndTestDB(this);
         String sql = "select id,time,score from library where flag = 1 and name=?";
-        arrayList = new ArrayList<Map<String,String>>();
+        arrayList = new ArrayList<>();
         librarylist =librarydb.getTestsList(sql,new String[]{libraryname});
         int size = librarylist.size();
         for(int i = 0;i<size;i++){
-            Map<String,String> map = new HashMap<String, String>();
+            Map<String,String> map = new HashMap<>();
             map.put("number","试题 "+ valueOf(i+1));
             map.put("time",librarylist.get(i).getTime());
             map.put("score",librarylist.get(i).getScore());
@@ -78,7 +74,7 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Library library = librarylist.get(position);
         String sql1 = "select * from question where test_id=?";
-        String sql2 = "select * from question where test_id=? and wrong_flag>0";
+        String sql2 = "select * from question where test_id=? and wrong_flag > 0";
         SelectQuestionDB selectquestiondb = new SelectQuestionDB(this);
         ArrayList<Question> questionlist1 = selectquestiondb.selectAllQuestion(sql1, valueOf(library.getId()));
         ArrayList<Question> questionlist2 = selectquestiondb.selectAllQuestion(sql2, valueOf(library.getId()));
@@ -90,11 +86,12 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // 点击“确认”后的操作
-                        Intent it = new Intent(ShowTestsActivity.this, TestsActivity.class);
+                        Intent it = new Intent(ShowTestsActivity.this, AllAndWrongActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist1);
                         bundle.putString("libraryname",libraryname);
                         bundle.putInt("test_id",0);
+                        bundle.putBoolean("flag",true);
                         it.putExtras(bundle);
                         ShowTestsActivity.this.startActivity(it);
                     }
@@ -104,11 +101,12 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                     public void onClick(DialogInterface dialog, int which) {
                         // 点击“返回”后的操作,这里不设置没有任何操作
                         // 点击“确认”后的操作
-                        Intent it = new Intent(ShowTestsActivity.this, TestsActivity.class);
+                        Intent it = new Intent(ShowTestsActivity.this, AllAndWrongActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist2);
                         bundle.putString("libraryname",libraryname);
-                        bundle.putInt("test_id",0);
+                        bundle.putInt("test_id",-1);
+                        bundle.putBoolean("flag",true);
                         it.putExtras(bundle);
                         ShowTestsActivity.this.startActivity(it);
                     }

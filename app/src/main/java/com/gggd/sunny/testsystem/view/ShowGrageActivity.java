@@ -89,7 +89,10 @@ public class ShowGrageActivity extends TitleActivity {
                     falselist.add(q);
                 }
             }
-        if(test_id != 0) {
+            if(test_id == -2){
+                wrongAndCollectDB.updateWrongCollect(list);
+             }
+            else if(test_id != 0 && test_id != -1) {
             Library library = new Library();
             library.setId(test_id);
             library.setTime(time);
@@ -122,11 +125,11 @@ public class ShowGrageActivity extends TitleActivity {
                 startActivity(intent);
                 break;
             case R.id.btnshowgradeall:
-                intent = new Intent(ShowGrageActivity.this,TestsActivity.class);
+                intent = new Intent(ShowGrageActivity.this,AllAndWrongActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("questionlist", list);
                 bundle.putString("libraryname",libraryname);
-                bundle.putInt("test_id",0);
+                bundle.putInt("test_id",-1);
                 intent.putExtras(bundle);
                 ShowGrageActivity.this.startActivity(intent);
                 break;
@@ -134,9 +137,9 @@ public class ShowGrageActivity extends TitleActivity {
                 if (falselist.isEmpty()){
                     Toast.makeText(this, "本次考试并无错题！", Toast.LENGTH_SHORT).show();
                 }else {
-                    intent = new Intent(ShowGrageActivity.this, TestsActivity.class);
+                    intent = new Intent(ShowGrageActivity.this, AllAndWrongActivity.class);
                     Bundle bundle1 = new Bundle();
-                    bundle1.putParcelableArrayList("questionlist", falselist);
+                    bundle1.putParcelableArrayList("questionlist", list);
                     bundle1.putString("libraryname", libraryname);
                     bundle1.putInt("test_id", 0);
                     intent.putExtras(bundle1);
@@ -154,7 +157,7 @@ public class ShowGrageActivity extends TitleActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             Intent intent = new Intent(ShowGrageActivity.this, MainActivity.class);
             startActivity(intent);
-            onDestroy();
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);

@@ -1,6 +1,10 @@
 package com.gggd.sunny.testsystem;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,9 +17,9 @@ import android.widget.Toast;
 
 /**
  * @author gao_chun
- * 自定义标题栏
+ *         自定义标题栏
  */
-public class TitleActivity extends Activity implements OnClickListener{
+public class TitleActivity extends Activity implements OnClickListener {
 
     //private RelativeLayout mLayoutTitleBar;
     private TextView mTitleTextView;
@@ -23,13 +27,35 @@ public class TitleActivity extends Activity implements OnClickListener{
     private Button mForwardButton;
     private FrameLayout mContentLayout;
 
+    private MyBaseActiviy_Broad oBaseActiviy_Broad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews();   //加载 activity_title 布局 ，并获取标题及两侧按钮
+        //动态注册广播
+        oBaseActiviy_Broad = new MyBaseActiviy_Broad();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.gggd.sunny.activity");
+        registerReceiver(oBaseActiviy_Broad, intentFilter);
     }
 
+    //在销毁的方法里面注销广播
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(oBaseActiviy_Broad);//注销广播
+    }
+
+    //定义一个广播
+    public class MyBaseActiviy_Broad extends BroadcastReceiver {
+        public void onReceive(Context arg0, Intent intent) {
+            //接收发送过来的广播内容
+            int closeAll = intent.getIntExtra("closeAll", 0);
+            if (closeAll == 1) {
+                finish();//销毁BaseActivity
+            }
+        }
+    }
 
     private void setupViews() {
         super.setContentView(R.layout.activity_title);
@@ -41,7 +67,8 @@ public class TitleActivity extends Activity implements OnClickListener{
 
     /**
      * 是否显示返回按钮
-     * @param show  true则显示
+     *
+     * @param show true则显示
      */
     protected void showBackwardView(boolean show) {
         if (mBackwardbButton != null) {
@@ -56,9 +83,10 @@ public class TitleActivity extends Activity implements OnClickListener{
 
     /**
      * 提供是否显示提交按钮
-     * @param show  true则显示
+     *
+     * @param show true则显示
      */
-    protected void showForwardView( boolean show) {
+    protected void showForwardView(boolean show) {
         if (mForwardButton != null) {
             if (show) {
                 mForwardButton.setVisibility(View.VISIBLE);
@@ -71,6 +99,7 @@ public class TitleActivity extends Activity implements OnClickListener{
 
     /**
      * 返回按钮点击后触发
+     *
      * @param backwardView
      */
     protected void onBackward(View backwardView) {
@@ -79,6 +108,7 @@ public class TitleActivity extends Activity implements OnClickListener{
 
     /**
      * 提交按钮点击后触发
+     *
      * @param forwardView
      */
     protected void onForward(View forwardView) {

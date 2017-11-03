@@ -35,6 +35,14 @@ public class WrongAndCollectDB {
             db.execSQL(sqltest, new Object[]{library.getScore(), library.getTime(),library.getId()});
         }
     }
+    //只更新错题和收藏集合，用于错题练习
+    public void updateWrongCollect(ArrayList<Question> list){
+        String sql_wrong_collect = "update collect_wrong set wrong_flag=?,collect_flag=? where question_id=(" +
+                "select question_id from question where id=?)";
+        for(Question q:list) {
+            db.execSQL(sql_wrong_collect, new Object[]{q.getWrong_flag(),q.getCollect_flag(),q.getId()});
+        }
+    }
 
     //更新收藏
     public void updateCollectQuestion(ArrayList<Question> list){

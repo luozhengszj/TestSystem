@@ -51,9 +51,9 @@ public class InsertQuestionDB {
         //记录question逐次增加的id
         question_id = maxid;
         //增加所有题目，记录错题、收藏
-        String collectsql = "insert into collect_wrong(question_id,wrong_flag,collect_flag) values(?,?,?)";
+        String collectsql = "insert into collect_wrong(question_id,type,wrong_flag,collect_flag) values(?,?,?,?)";
         for(int i = 1;i<=list.size();i++) {
-            db.execSQL(collectsql, new Object[]{question_id+i,0,0});
+            db.execSQL(collectsql, new Object[]{question_id+i,1,0,0});
         }
         //2 2
         //题库的指定数字id
@@ -139,9 +139,9 @@ public class InsertQuestionDB {
         //记录question逐次增加的id
         question_id = maxid;
         //增加所有题目，记录错题、收藏
-        String collectsql = "insert into collect_wrong(question_id,wrong_flag,collect_flag) values(?,?,?)";
+        String collectsql = "insert into collect_wrong(question_id,type,wrong_flag,collect_flag) values(?,?,?,?)";
         for(int i = 1;i<=list.size();i++) {
-            db.execSQL(collectsql, new Object[]{question_id+i,0,0});
+            db.execSQL(collectsql, new Object[]{question_id+i,2,0,0});
         }
         //2 2
         //题库的指定数字id
@@ -225,9 +225,9 @@ public class InsertQuestionDB {
         //记录question逐次增加的id
         question_id = maxid;
         //增加所有题目，记录错题、收藏
-        String collectsql = "insert into collect_wrong(question_id,wrong_flag,collect_flag) values(?,?,?)";
+        String collectsql = "insert into collect_wrong(question_id,type,wrong_flag,collect_flag) values(?,?,?,?)";
         for(int i = 1;i<=list.size();i++) {
-            db.execSQL(collectsql, new Object[]{question_id+i,0,0});
+            db.execSQL(collectsql, new Object[]{question_id+i,3,0,0});
         }
 
         String[] splitstr = library.getLibrary_num().split(" ");

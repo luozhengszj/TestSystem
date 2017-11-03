@@ -41,6 +41,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "\"test_id\"  INTEGER,wrong_flag INTEGER,question_id INTEGER)";
     private static final  String CREATE_COLLECTION_TABLE = "CREATE TABLE \"collect_wrong\" (" +
             "\"question_id\"  INTEGER," +
+            "\"type\"  CHAR(1) ," +
             "\"wrong_flag\"  CHAR(1) ," +
             "\"collect_flag\"  CHAR(1))";
 
