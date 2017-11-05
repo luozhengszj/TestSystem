@@ -239,6 +239,7 @@
                 android:background="@color/line_color" />
 
             <Button
+                android:id="@+id/btnabout"
                 android:layout_columnWeight="1"
                 android:layout_gravity="center"
                 android:layout_rowWeight="1"

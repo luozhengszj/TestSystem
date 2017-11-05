@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     private Button mbtnqiehuan;
     private Button mbtndeletelibrary;
     private Button moutquestion;
+    private Button mbtnabout;
 
     private String libraryname;
     private LibraryAndTestDB libraryAndTestDB;
@@ -80,6 +82,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         mbtnqiehuan = (Button) findViewById(R.id.btnqiehuan);
         mbtndeletelibrary = (Button) findViewById(R.id.btndeletelibrary);
         moutquestion = (Button) findViewById(R.id.outquestion);
+        mbtnabout = (Button) findViewById(R.id.btnabout);
 
         verifyStoragePermissions(MainActivity.this);
         SharedPreferences sharedPreferences = getSharedPreferences("librarydata",
@@ -105,6 +108,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         mbtnqiehuan.setOnClickListener(this);
         mbtndeletelibrary.setOnClickListener(this);
         moutquestion.setOnClickListener(this);
+        mbtnabout.setOnClickListener(this);
     }
 
     @Override
@@ -160,6 +164,12 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             case R.id.outquestion:
                 outquestion();
                 break;
+            case R.id.btnabout:
+                intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
+                intent.setData(content_url);
+                startActivity(intent);
         }
     }
 
