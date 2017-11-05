@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/tvshowtestshow1"
             android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:textColor="#fff"
@@ -24,7 +24,7 @@
         <TextView
             android:id="@+id/tvshowtestshow2"
             android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:textColor="#fff"
@@ -32,7 +32,7 @@
         <TextView
             android:id="@+id/tvshowtestshow3"
             android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:textColor="#fff"

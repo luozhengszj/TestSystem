@@ -82,10 +82,10 @@ public class ShowGrageActivity extends TitleActivity {
                 if (q.getAnswer().equals(q.getOption_t())) {
                     truenum++;
                     count = count + q.getScore();
-                    q.setWrong_flag(0);
+                    q.setWrong_flag("0");
                 } else {
                     falsenum++;
-                    q.setWrong_flag(1);
+                    q.setWrong_flag("1");
                     falselist.add(q);
                 }
             }

@@ -19,9 +19,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "\"name\"  TEXT(10) NOT NULL," +
             "\"num\"  CHAR(3) NOT NULL," +
             "\"flag\"  CHAR(1) NOT NULL DEFAULT 0," +
-            "\"single_num\"  CHAR(3)," +
-            "\"multiple_num\"  CHAR(3)," +
-            "\"judge_num\"  CHAR(3)," +
+            "\"single_num\"  INTEGER(3)," +
+            "\"multiple_num\"  INTEGER(3)," +
+            "\"judge_num\"  INTEGER(3)," +
             "\"score\"  CHAR(3)," +
             "\"time\"  TEXT(20));";
     private static final String CREATE_QUESTION_TABLE = "CREATE TABLE \"question\" (" +

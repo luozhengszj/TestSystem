@@ -139,11 +139,6 @@
             android:columnCount="1"
             android:rowCount="2">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dip"
-                android:background="@color/line_color" />
-
             <Button
                 android:id="@+id/btncollecttitle"
                 android:layout_columnWeight="1"
@@ -168,6 +163,10 @@
                 android:drawableTop="@drawable/outimg"
                 android:text="导出题目"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="@color/line_color" />
         </GridLayout>
 
         <View
@@ -181,11 +180,6 @@
             android:layout_weight="1"
             android:columnCount="1"
             android:rowCount="2">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dip"
-                android:background="@color/line_color" />
 
             <Button
                 android:id="@+id/btnwrongtitle"
@@ -211,6 +205,10 @@
                 android:drawableTop="@drawable/delete"
                 android:text="删除题库"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="@color/line_color" />
         </GridLayout>
 
         <View
@@ -224,11 +222,6 @@
             android:layout_weight="1"
             android:columnCount="1"
             android:rowCount="2">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dip"
-                android:background="@color/line_color" />
 
             <Button
                 android:id="@+id/btnallquestiontitle"
@@ -253,6 +246,10 @@
                 android:drawableTop="@drawable/about"
                 android:text="关于我们"
                 android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="@color/line_color" />
         </GridLayout>
     </LinearLayout>
 

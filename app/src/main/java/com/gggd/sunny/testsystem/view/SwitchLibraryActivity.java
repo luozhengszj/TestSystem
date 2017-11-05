@@ -106,11 +106,7 @@ public class SwitchLibraryActivity extends TitleActivity implements AdapterView.
                             finish();
                         }
                     })
-                    .setNegativeButton("只看错题", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    }).show();
+                    .setNegativeButton("取消", null).show();
         }
     }
 }

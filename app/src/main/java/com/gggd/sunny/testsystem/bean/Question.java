@@ -24,7 +24,7 @@ public class Question implements Parcelable{
     private int score;
     private int test_id;
     private String collect_flag;
-    private int wrong_flag;
+    private String wrong_flag;
 
     @Override
     public String toString() {
@@ -48,7 +48,7 @@ public class Question implements Parcelable{
 
     public Question(int id, String type, String topic, String option_a, String option_b, String option_c,
                     String option_d, String option_e, String option_f, String option_t,String answer,
-                    int score,int wrong_flag) {
+                    int score,String wrong_flag) {
         this.id = id;
         this.type = type;
         this.topic = topic;
@@ -184,11 +184,11 @@ public class Question implements Parcelable{
         this.collect_flag = collect_flag;
     }
 
-    public int getWrong_flag() {
+    public String getWrong_flag() {
         return wrong_flag;
     }
 
-    public void setWrong_flag(int wrong_flag) {
+    public void setWrong_flag(String wrong_flag) {
         this.wrong_flag = wrong_flag;
     }
 
@@ -229,7 +229,7 @@ public class Question implements Parcelable{
         dest.writeInt(score);
         dest.writeInt(test_id);
         dest.writeString(collect_flag);
-        dest.writeInt(wrong_flag);
+        dest.writeString(wrong_flag);
     }
     public static final Creator<Question> CREATOR = new Creator<Question>() {
         @Override
@@ -250,7 +250,7 @@ public class Question implements Parcelable{
             question.score = source.readInt();
             question.test_id = source.readInt();
             question.collect_flag = source.readString();
-            question.wrong_flag = source.readInt();
+            question.wrong_flag = source.readString();
             return question;
         }
 

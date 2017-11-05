@@ -197,6 +197,7 @@ public class MakeTestModeActivity extends TitleActivity {
                 Toast.makeText(this, "增加成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MakeTestModeActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         }
     }

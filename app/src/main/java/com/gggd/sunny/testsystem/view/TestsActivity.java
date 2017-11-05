@@ -350,6 +350,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                         bundle.putInt("test_id", test_id);
                         it.putExtras(bundle);
                         TestsActivity.this.startActivity(it);
+                        finish();
                     }
                 })
                 .setNegativeButton("取消", null).show();

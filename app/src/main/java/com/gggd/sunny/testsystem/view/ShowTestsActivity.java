@@ -85,7 +85,6 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                 .setPositiveButton("查看全部", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // 点击“确认”后的操作
                         Intent it = new Intent(ShowTestsActivity.this, AllAndWrongActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist1);
@@ -99,8 +98,6 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                 .setNegativeButton("只看错题", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // 点击“返回”后的操作,这里不设置没有任何操作
-                        // 点击“确认”后的操作
                         Intent it = new Intent(ShowTestsActivity.this, AllAndWrongActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist2);

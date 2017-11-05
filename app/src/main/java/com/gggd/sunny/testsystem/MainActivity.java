@@ -274,6 +274,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     public void deleteLibrary() {
         libraryAndTestDB = new LibraryAndTestDB(this);
         final EditText et = new EditText(this);
+        final SharedPreferences mySharedPreferences= this.getSharedPreferences("librarydata",
+                Activity.MODE_PRIVATE);
         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT).setTitle("输入需要删除的题库名")
                 .setIcon(null)
                 .setView(et)
@@ -291,6 +293,12 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                                     libraryname = "欢迎使用";
                                     mtvlibraryname.setText("欢迎使用");
                                     mtvlibrarypercent.setText("");
+
+                                    //实例化SharedPreferences.Editor对象（第二步）
+                                    SharedPreferences.Editor editor = mySharedPreferences.edit();
+                                    editor.putString("testcount", "你好");
+                                    editor.putString("libraryname", "欢迎使用");
+                                    editor.commit();
                                 } else {
                                     String tmppercent = libraryAndTestDB.getPercent(tmplibrayname);
                                     libraryname = tmplibrayname;

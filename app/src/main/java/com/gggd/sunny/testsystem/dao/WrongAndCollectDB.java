@@ -3,7 +3,6 @@ package com.gggd.sunny.testsystem.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.gggd.sunny.testsystem.bean.Library;
 import com.gggd.sunny.testsystem.bean.Question;
@@ -71,7 +70,7 @@ public class WrongAndCollectDB {
             String option_e = cursor.getString(cursor.getColumnIndex("option_e"));
             String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
             String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
-            int wrong_flag = cursor.getInt(cursor.getColumnIndex("wrong_flag"));
+            String wrong_flag = cursor.getString(cursor.getColumnIndex("wrong_flag"));
             String option_answer = "";
             int score = cursor.getInt(cursor.getColumnIndex("score"));
             Question question = new Question(id, type, topic, option_a, option_b, option_c, option_d, option_e, option_f,
