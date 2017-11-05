@@ -36,7 +36,7 @@ import java.util.List;
  */
 
 public class TestsActivity extends TitleActivity implements RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener{
+        AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
     private Button mbtnbutton_forward;
 
     private Button mbtnabovetquestion;
@@ -90,7 +90,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         setTitle(libraryname);
         showForwardView(true);
         test_id = bundle.getInt("test_id");
-        Log.d("tests lztest_id",""+test_id);
+        Log.d("tests lztest_id", "" + test_id);
         size = list.size();
         nownum = 1;
         mtvquestionlist.setText(nownum + "/" + size);
@@ -143,42 +143,42 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         //同时设置“交卷”为“返回”，返回（包括返回键）即返回到主页
         //test_id !=0的时候，说明是考试（在这里就是错题考试）
         selectTypeShow(list.get(0));
-        if(test_id == -2){
+        if (test_id == -2) {
             questionnow = list.get(0);
         }
-            showBackwardView(false);
-            mbtnbutton_forward.setText("交卷");
-            mrgquestionsingle.setOnCheckedChangeListener(this);
-            mrgquestionjedge.setOnCheckedChangeListener(this);
+        showBackwardView(false);
+        mbtnbutton_forward.setText("交卷");
+        mrgquestionsingle.setOnCheckedChangeListener(this);
+        mrgquestionjedge.setOnCheckedChangeListener(this);
 
-            mdbtoggle = new ActionBarDrawerToggle(this, mdlquestionlist, R.drawable.sanheng,
-                    R.string.testdrawer_open, R.string.testdrawer_close) {
-                @Override
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    mbtnbutton_forward.setText("列表");
-                    mbtnbutton_forward.setEnabled(false);
-                    arrayList = new ArrayList<>();
-                    for (int i = 1; i <= size; i++) {
-                        String answer = list.get(i - 1).getAnswer();
-                        if (answer.equals("")) {
-                            arrayList.add("  " + i + "   未做");
-                        } else {
-                            arrayList.add("  " + i + "   " + answer);
-                        }
+        mdbtoggle = new ActionBarDrawerToggle(this, mdlquestionlist, R.drawable.sanheng,
+                R.string.testdrawer_open, R.string.testdrawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mbtnbutton_forward.setText("列表");
+                mbtnbutton_forward.setEnabled(false);
+                arrayList = new ArrayList<>();
+                for (int i = 1; i <= size; i++) {
+                    String answer = list.get(i - 1).getAnswer();
+                    if (answer.equals("")) {
+                        arrayList.add("  " + i + "   未做");
+                    } else {
+                        arrayList.add("  " + i + "   " + answer);
                     }
-                    adapter = new ArrayAdapter<>(TestsActivity.this, android.R.layout.simple_list_item_1, arrayList);
-                    mlvquestionlist.setAdapter(adapter);
                 }
+                adapter = new ArrayAdapter<>(TestsActivity.this, android.R.layout.simple_list_item_1, arrayList);
+                mlvquestionlist.setAdapter(adapter);
+            }
 
-                @Override
-                public void onDrawerClosed(View drawerView) {
-                    super.onDrawerClosed(drawerView);
-                    mbtnbutton_forward.setText("交卷");
-                    mbtnbutton_forward.setEnabled(true);
-                }
-            };
-            mdlquestionlist.setDrawerListener(mdbtoggle);
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                mbtnbutton_forward.setText("交卷");
+                mbtnbutton_forward.setEnabled(true);
+            }
+        };
+        mdlquestionlist.setDrawerListener(mdbtoggle);
 
     }
 
@@ -217,13 +217,14 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 break;
         }
     }
+
     //这是题目的显示
     public void selectTypeShow(Question question) {
         String type = question.getType();
         String selectTypeShowanswer = question.getAnswer();
         mrgquestionjedge.clearCheck();
         mrgquestionsingle.clearCheck();
-        if ("1".equals(question.getCollect_flag())) {
+        if ("1" .equals(question.getCollect_flag())) {
             mcbncollectquestion.setChecked(true);
         } else {
             mcbncollectquestion.setChecked(false);
@@ -290,10 +291,11 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             }
         }
     }
+
     //插入答案
     public void insertAnswer(int questionnum, int selectnum, String type) {
         String questionanswer = "";
-        if ("2".equals(type)) {
+        if ("2" .equals(type)) {
             int checkBoxListsize = checkBoxList.size();
             for (int i = 0; i < checkBoxListsize; i++) {
                 if (checkBoxList.get(i).isChecked()) {
@@ -301,12 +303,12 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                     questionanswer = questionanswer + c1;
                 }
             }
-        } else if ("1".equals(type)) {
+        } else if ("1" .equals(type)) {
             if (selectnum > -1 && selectnum < 4) {
                 questionanswer = questionanswer + (char) (selectnum + 65);
             }
-        } else if ("3".equals(type)) {
-            Log.d("lzje",selectnum+"");
+        } else if ("3" .equals(type)) {
+            Log.d("lzje", selectnum + "");
             if (selectnum == 7) {
                 questionanswer = "对";
             } else if (selectnum == 8) {
@@ -315,6 +317,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         }
         list.get(questionnum).setAnswer(questionanswer);
     }
+
     //检查答案是否填完
     public void checkAnswer() {
         boolean f = true;
@@ -342,20 +345,16 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                         String date = sDateFormat.format(curDate);
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", list);
-                        bundle.putString("libraryname",libraryname);
-                        bundle.putString("date",date);
-                        bundle.putInt("test_id",test_id);
+                        bundle.putString("libraryname", libraryname);
+                        bundle.putString("date", date);
+                        bundle.putInt("test_id", test_id);
                         it.putExtras(bundle);
                         TestsActivity.this.startActivity(it);
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 点击“返回”后的操作,这里不设置没有任何操作
-                    }
-                }).show();
+                .setNegativeButton("取消", null).show();
     }
+
     //监听返回键
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -381,9 +380,9 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
-        nownum = position ;
+        nownum = position;
         mtvquestionlist.setText(position + "/" + size);
-        selectTypeShow(list.get(position-1));
+        selectTypeShow(list.get(position - 1));
     }
 
     //是否收藏，这是对
@@ -399,15 +398,15 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         int i = -10;
-            int radioButtonId;
-            if (group.equals(mrgquestionsingle)) {
-                radioButtonId = mrgquestionsingle.getCheckedRadioButtonId();
-                i = mrgquestionsingle.indexOfChild(mrgquestionsingle.findViewById(radioButtonId));
-            } else if(group.equals(mrgquestionjedge)) {
-                radioButtonId = mrgquestionjedge.getCheckedRadioButtonId();
-                i = mrgquestionjedge.indexOfChild(mrgquestionjedge.findViewById(radioButtonId));
-                i = i + 7;
-            }
-            questionselect = i;
+        int radioButtonId;
+        if (group.equals(mrgquestionsingle)) {
+            radioButtonId = mrgquestionsingle.getCheckedRadioButtonId();
+            i = mrgquestionsingle.indexOfChild(mrgquestionsingle.findViewById(radioButtonId));
+        } else if (group.equals(mrgquestionjedge)) {
+            radioButtonId = mrgquestionjedge.getCheckedRadioButtonId();
+            i = mrgquestionjedge.indexOfChild(mrgquestionjedge.findViewById(radioButtonId));
+            i = i + 7;
+        }
+        questionselect = i;
     }
 }

@@ -88,5 +88,89 @@ public class LibraryAndTestDB {
         }
         return list;
     }
-
+    //切换试卷
+    public ArrayList<Library> getAllLibrary(){
+        ArrayList<Library> list = new ArrayList<>();
+        String sql = "select DISTINCT(name) from library";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            Library library = new Library();
+            library.setLibrary_name(name);
+            list.add(library);
+        }
+        return list;
+    }
+    //获取每个librarname的信息
+    public ArrayList<Library> getLibraryInfo(ArrayList<Library> namelist){
+        ArrayList<Library> list = new ArrayList<>();
+        String sql0 = "select count(*) from library where name=? and flag=0";
+        String sql1 = "select count(*) from library where name=? and flag=1";
+        Cursor cursor;
+        for(int i =  0;i<namelist.size();i++) {
+            cursor = db.rawQuery(sql0, new String[]{namelist.get(i).getLibrary_name()});
+            cursor.moveToFirst();
+            String flag0 = cursor.getString(cursor.getColumnIndex("count(*)"));
+            namelist.get(i).setScore(flag0);
+            cursor = db.rawQuery(sql1, new String[]{namelist.get(i).getLibrary_name()});
+            cursor.moveToFirst();
+            String flag1 = cursor.getString(cursor.getColumnIndex("count(*)"));
+            namelist.get(i).setTime(flag1);
+            list.add(namelist.get(i));
+        }
+        return list;
+    }
+    public String existLibrary(String libraryname){
+        String sql = "select count(*) from library where name=?";
+        Cursor cursor = db.rawQuery(sql, new String[]{libraryname});
+        cursor.moveToFirst();
+        String flag1 = cursor.getString(cursor.getColumnIndex("count(*)"));
+        return flag1;
+    }
+    //删除题库
+    public int deleteLibrary(String libraryname){
+        String sql = "select DISTINCT(num) from library where name=?";
+        Cursor cursor = db.rawQuery(sql, new String[]{libraryname});
+        int flag1 = -1;
+        if(cursor.getCount() == 0){
+            flag1 = -1;
+        }else {
+            cursor.moveToFirst();
+            flag1 = cursor.getInt(cursor.getColumnIndex("num"));
+        }
+        return flag1;
+    }
+    public String deleteLibrary2(int num){
+        String sql3 = "delete  from collect_wrong where question_id in(" +
+                "select DISTINCT(question_id) from question where library_num=?)";
+        String sql2 = "delete from question where library_num=?";
+        String sql1 = "delete from library where num=?";
+        db.execSQL(sql3,new Object[]{num});
+        db.execSQL(sql2,new Object[]{num});
+        db.execSQL(sql1,new Object[]{num});
+        String flag1 = " ";
+        String sql4 = "select name from library  order by num asc limit 1";
+        Cursor cursor = db.rawQuery(sql4, null);
+        if(!(cursor.getCount() == 0)){
+            cursor.moveToFirst();
+            flag1 = cursor.getString(cursor.getColumnIndex("name"));
+        }
+        return flag1;
+    }
+    public String getPercent(String libraryname){
+        String tmp = "";
+        String sql1 = "select count(*) from library where name=? and flag = 1";
+        String sql2 = "select count(*) from library where name=?";
+        Cursor cursor = db.rawQuery(sql1, null);
+        if(!(cursor.getCount() == 0)){
+            cursor.moveToFirst();
+            tmp = cursor.getString(cursor.getColumnIndex("count(*)"));
+            cursor = db.rawQuery(sql2, null);
+            if(!(cursor.getCount() == 0)){
+                cursor.moveToFirst();
+                tmp = tmp+"/"+cursor.getString(cursor.getColumnIndex("count(*)"));
+            }
+        }
+        return tmp;
+    }
 }

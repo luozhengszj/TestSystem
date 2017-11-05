@@ -148,4 +148,35 @@ public class SelectQuestionDB {
         }
         return list;
     }
+    //导出题目
+    public ArrayList<Question> getQuestion(String sql){
+        ArrayList<Question> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery(sql,null);
+        while (cursor.moveToNext()){
+            String topic = cursor.getString(cursor.getColumnIndex("topic"));
+            String option_a = cursor.getString(cursor.getColumnIndex("option_a"));
+            String option_b = cursor.getString(cursor.getColumnIndex("option_b"));
+            String option_c = cursor.getString(cursor.getColumnIndex("option_c"));
+            String option_d = cursor.getString(cursor.getColumnIndex("option_d"));
+            String option_e = cursor.getString(cursor.getColumnIndex("option_e"));
+            String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
+            String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
+            Question question = new Question(topic,option_a,option_b,option_c,option_d,option_e,option_f,option_t);
+            list.add(question);
+        }
+        return list;
+    }
+    //导出题库
+    public int getLibrarynum(String libraryname){
+        String sql = "select DISTINCT(num) from library where name=?";
+        Cursor cursor = db.rawQuery(sql, new String[]{libraryname});
+        int flag1 = -1;
+        if(cursor.getCount() == 0){
+            flag1 = -1;
+        }else {
+            cursor.moveToFirst();
+            flag1 = cursor.getInt(cursor.getColumnIndex("num"));
+        }
+        return flag1;
+    }
 }

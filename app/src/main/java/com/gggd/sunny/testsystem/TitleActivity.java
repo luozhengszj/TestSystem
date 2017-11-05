@@ -176,7 +176,6 @@ public class TitleActivity extends Activity implements OnClickListener {
             case R.id.button_forward:
                 onForward(v);
                 break;
-
             default:
                 break;
         }

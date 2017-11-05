@@ -28,24 +28,7 @@ public class Question implements Parcelable{
 
     @Override
     public String toString() {
-        return "Question{" +
-                "id=" + id +
-                ", library_num='" + library_num + '\'' +
-                ", type='" + type + '\'' +
-                ", topic='" + topic + '\'' +
-                ", option_a='" + option_a + '\'' +
-                ", option_b='" + option_b + '\'' +
-                ", option_c='" + option_c + '\'' +
-                ", option_d='" + option_d + '\'' +
-                ", option_e='" + option_e + '\'' +
-                ", option_f='" + option_f + '\'' +
-                ", option_t='" + option_t + '\'' +
-                ", answer='" + answer + '\'' +
-                ", score=" + score +
-                ", test_id=" + test_id +
-                ", collect_flag='" + collect_flag + '\'' +
-                ", wrong_flag=" + wrong_flag +
-                '}';
+        return id+" . "+topic;
     }
 
     public Question() {
