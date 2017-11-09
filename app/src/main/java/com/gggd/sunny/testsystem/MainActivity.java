@@ -86,6 +86,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         // 使用getString方法获得value，注意第2个参数是value的默认值
         libraryname = sharedPreferences.getString("libraryname", "欢迎使用");
 
+
         libraryAndTestDB = new LibraryAndTestDB(this);
         libraryAndTestDB.existLibrary(libraryname);
         String tmpflag = libraryAndTestDB.existLibrary(libraryname);
@@ -169,11 +170,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                 outquestion();
                 break;
             case R.id.btnabout:
-                intent = new Intent();
-                intent.setAction("android.intent.action.VIEW");
-                Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
-                intent.setData(content_url);
-                startActivity(intent);
+                anboutOus();
+                break;
         }
     }
 
@@ -378,7 +376,25 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                 .setIcon(android.R.drawable.divider_horizontal_bright)
                 .setItems(new String[]{"   保存在SD>TestSystem>."},null).show();
     }
-
+    //关于我们
+    public void anboutOus(){
+        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                .setIcon(android.R.drawable.divider_horizontal_bright)
+                .setItems(new String[]{"1.导入文件仅接受.xls;格式为：题目、选项(多选题最多支持六个选项)、正确答案(A.B..或正确错误)",
+                        "2.导出的excel第一行即为导入第一道题",
+                        "3.除了正确答案无需在选项或者题目单元格增加其他内容，如A...","----欢迎访问Github"},
+                        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which==3){
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
+                    intent.setData(content_url);
+                    startActivity(intent);
+                }
+            }}).show();
+    }
 
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission

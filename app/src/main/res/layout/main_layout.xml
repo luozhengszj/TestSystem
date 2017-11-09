@@ -117,7 +117,7 @@
                 android:layout_rowWeight="1"
                 android:background="@null"
                 android:drawableTop="@drawable/newku"
-                android:text="导入新库"
+                android:text="导入题库"
                 android:textSize="18sp" />
         </GridLayout>
     </LinearLayout>
@@ -230,7 +230,7 @@
                 android:layout_rowWeight="1"
                 android:background="@null"
                 android:drawableTop="@drawable/inputimg"
-                android:text="查看全部"
+                android:text="浏览题目"
                 android:textSize="18sp" />
 
             <View
@@ -245,7 +245,8 @@
                 android:layout_rowWeight="1"
                 android:background="@null"
                 android:drawableTop="@drawable/about"
-                android:text="关于我们"
+                android:gravity="center"
+                android:text="关于"
                 android:textSize="18sp" />
             <View
                 android:layout_width="match_parent"
