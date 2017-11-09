@@ -8,7 +8,9 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -75,11 +77,16 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     private int nownum;
     private int size;
     private Question questionnow;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.begintest_layout);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.testdrawer_layout);
+        drawerLayout.setOnTouchListener(this);//将主容器的监听交给本activity，本activity再交给mGestureDetector
+        drawerLayout.setLongClickable(true);   //必需设置这为true 否则也监听不到手势
+        mGestureDetector = new GestureDetector(this, myGestureListener);
         mbtnbutton_forward = (Button) findViewById(R.id.button_forward);
         mtvquestionlist = (TextView) findViewById(R.id.tvquestionlist);
 
@@ -179,7 +186,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             }
         };
         mdlquestionlist.setDrawerListener(mdbtoggle);
-
     }
 
     @Override
@@ -374,7 +380,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             clickTime = System.currentTimeMillis();
         } else {
             this.finish();
-            System.exit(0);
         }
     }
 
@@ -409,5 +414,41 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             i = i + 7;
         }
         questionselect = i;
+    }
+    private static final int FLING_MIN_DISTANCE = 50;   //最小距离
+    private static final int FLING_MIN_VELOCITY = 0;  //最小速度
+    GestureDetector.SimpleOnGestureListener myGestureListener = new GestureDetector.SimpleOnGestureListener(){
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            float x = e1.getX()-e2.getX();
+            float x2 = e2.getX()-e1.getX();
+            //往左滑动
+            if(x>FLING_MIN_DISTANCE&&Math.abs(velocityX)>FLING_MIN_VELOCITY){
+                if (nownum != size) {
+                    insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
+                    nownum = nownum + 1;
+                    questionnow = list.get(nownum - 1);
+                    mtvquestionlist.setText(nownum + "/" + size);
+                    selectTypeShow(questionnow);
+                }
+            }
+            //往右滑动
+            else if(x2>FLING_MIN_DISTANCE&&Math.abs(velocityX)>FLING_MIN_VELOCITY){
+                if (nownum != 1) {
+                    insertAnswer(nownum - 1, questionselect, list.get(nownum - 1).getType());
+                    nownum = nownum - 1;
+                    questionnow = list.get(nownum - 1);
+                    mtvquestionlist.setText(nownum + "/" + size);
+                    selectTypeShow(questionnow);
+                }
+            }
+            return false;
+        }
+    };
+    //下面是实现OnTouch方法 并将处理touch时间交给mGestureDetector
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // TODO Auto-generated method stub
+        return mGestureDetector.onTouchEvent(event);
     }
 }

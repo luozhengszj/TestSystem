@@ -32,6 +32,8 @@ public class MyAdapter<T> extends BaseAdapter implements Filterable {
 
     private LayoutInflater mInflater;
 
+    private int  selectItem=-1;
+
     private String keyWrold = ""; // 关键字
 
     public MyAdapter(Context context, List<T> list) {
@@ -60,7 +62,9 @@ public class MyAdapter<T> extends BaseAdapter implements Filterable {
         // TODO Auto-generated method stub
         return position;
     }
-
+    public  void setSelectItem(int selectItem) {
+        this.selectItem = selectItem;
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
@@ -82,7 +86,7 @@ public class MyAdapter<T> extends BaseAdapter implements Filterable {
                 if (length <= 10) {
                     spannableString = new SpannableString(str);
                     spannableString.setSpan(
-                            new ForegroundColorSpan(0xffec8b44), i,
+                            new ForegroundColorSpan(Color.rgb(152,251,152) ), i,
                             i + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
                     String s2 = str.substring(i - 10);
@@ -101,6 +105,12 @@ public class MyAdapter<T> extends BaseAdapter implements Filterable {
             spannableString.setSpan(new ForegroundColorSpan(Color.BLACK), 0,
                     str.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             viewHolder.txtv.setText(mObjects.get(position).toString());
+        }
+        if (position == selectItem) {
+            convertView.setBackgroundColor(Color.rgb(173,216,230));
+        }
+        else {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
         }
         return convertView;
     }

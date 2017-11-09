@@ -133,7 +133,7 @@ public class SelectQuestionDB {
         }
         if(judge_num > 0) {
             String sql = "select * from question where id in (" +
-                    "select question_id from collect_wrong where wrong_flag='1' and type='3' limit "+judge_num+"))";
+                    "select question_id from collect_wrong where wrong_flag='1' and type='3' limit "+judge_num+")";
             cursor = db.rawQuery(sql, null);
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));

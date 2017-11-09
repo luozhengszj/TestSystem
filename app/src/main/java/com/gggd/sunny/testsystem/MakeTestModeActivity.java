@@ -37,10 +37,6 @@ public class MakeTestModeActivity extends TitleActivity {
     private Button mbtnmakelibraryok;
     private Button mbuttonbackward;
 
-//    private ProgressBar mprogressbar;
-//    private LinearLayout mmlaymian;
-//    private LinearLayout mplayout;
-
     private String singlefilepath;
     private String multiplefilepath;
     private String judgefilepath;
@@ -58,6 +54,7 @@ public class MakeTestModeActivity extends TitleActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_test_model);
         setTitle("设置试卷组成");
+        showForwardView(false);
 
         metlibraryname = (EditText) findViewById(R.id.etlibraryname);
         metsinglenum = (EditText) findViewById(R.id.etsinglenum);
@@ -75,10 +72,6 @@ public class MakeTestModeActivity extends TitleActivity {
 
         mbtnmakelibrarydefault.setOnClickListener(this);
         mbtnmakelibraryok.setOnClickListener(this);
-
-//        mmlaymian = (LinearLayout) findViewById(R.id.laymiantop);
-//        mplayout = (LinearLayout) findViewById(R.id.mianprogressbar);
-//        mprogressbar = (ProgressBar) findViewById(R.id.pbmakelibrary);
 
         Bundle extras = getIntent().getExtras();
         singlefilepath = extras.getString("singlepath");
@@ -187,11 +180,8 @@ public class MakeTestModeActivity extends TitleActivity {
                         Activity.MODE_PRIVATE);
                 //实例化SharedPreferences.Editor对象（第二步）
                 SharedPreferences.Editor editor = mySharedPreferences.edit();
-
-                editor.putString("testcount", ""+limitnum);
+                
                 editor.putString("libraryname", library.getLibrary_name());
-                editor.putString("testxg", "/");
-                editor.putString("testless", ""+0);
                 //提交当前数据
                 editor.commit();
                 Toast.makeText(this, "增加成功！", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -19,7 +20,7 @@ import android.widget.Toast;
  * @author gao_chun
  *         自定义标题栏
  */
-public class TitleActivity extends Activity implements OnClickListener {
+public class TitleActivity extends Activity implements OnClickListener ,View.OnTouchListener{
 
     //private RelativeLayout mLayoutTitleBar;
     private TextView mTitleTextView;
@@ -44,6 +45,11 @@ public class TitleActivity extends Activity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(oBaseActiviy_Broad);//注销广播
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
     //定义一个广播

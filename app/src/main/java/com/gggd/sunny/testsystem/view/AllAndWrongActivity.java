@@ -2,8 +2,11 @@ package com.gggd.sunny.testsystem.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -70,6 +73,7 @@ public class AllAndWrongActivity extends TitleActivity implements
     private Question questionnow;
     private boolean flag;
     private boolean backflag = false;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +177,11 @@ public class AllAndWrongActivity extends TitleActivity implements
         mtvquestiontruetext.setVisibility(View.VISIBLE);
         mtvquestiontrue.setVisibility(View.VISIBLE);
         cannotSelect();
+
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.testdrawer_layout);
+        drawerLayout.setOnTouchListener(this);//将主容器的监听交给本activity，本activity再交给mGestureDetector
+        drawerLayout.setLongClickable(true);   //必需设置这为true 否则也监听不到手势
+        mGestureDetector = new GestureDetector(this, myGestureListener);
     }
 
     @Override
@@ -393,5 +402,39 @@ public class AllAndWrongActivity extends TitleActivity implements
     public void updateCollect(ArrayList<Question> list) {
         WrongAndCollectDB wrongAndCollectDB = new WrongAndCollectDB(this);
         wrongAndCollectDB.updateCollectQuestion(list);
+    }
+    private static final int FLING_MIN_DISTANCE = 50;   //最小距离
+    private static final int FLING_MIN_VELOCITY = 0;  //最小速度
+    GestureDetector.SimpleOnGestureListener myGestureListener = new GestureDetector.SimpleOnGestureListener(){
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            float x = e1.getX()-e2.getX();
+            float x2 = e2.getX()-e1.getX();
+            //往左滑动
+            if(x>FLING_MIN_DISTANCE&&Math.abs(velocityX)>FLING_MIN_VELOCITY){
+                if (nownum != size) {
+                    nownum = nownum + 1;
+                    questionnow = list.get(nownum - 1);
+                    mtvquestionlist.setText(nownum + "/" + size);
+                    selectTypeShow(questionnow);
+                }
+            }
+            //往右滑动
+            else if(x2>FLING_MIN_DISTANCE&&Math.abs(velocityX)>FLING_MIN_VELOCITY){
+                if (nownum != 1) {
+                    nownum = nownum - 1;
+                    questionnow = list.get(nownum - 1);
+                    mtvquestionlist.setText(nownum + "/" + size);
+                    selectTypeShow(questionnow);
+                }
+            }
+            return false;
+        }
+    };
+    //下面是实现OnTouch方法 并将处理touch时间交给mGestureDetector
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // TODO Auto-generated method stub
+        return mGestureDetector.onTouchEvent(event);
     }
 }

@@ -3,7 +3,6 @@ package com.gggd.sunny.testsystem.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.gggd.sunny.testsystem.bean.Library;
 import com.gggd.sunny.testsystem.tools.DBOpenHelper;
@@ -24,21 +23,23 @@ public class LibraryAndTestDB {
     }
 
     public String insertLibraryTestCount(Library library, int max) {
-        String minnumsql = "select id,num from library where id=(select max(id) from library)";
+        String minnumsql = "select num from library where id=(select max(id) from library)";
         Cursor cursor = db.rawQuery(minnumsql, null);
         int minnum = 1;
         int minid = 0;
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-            minnum = Integer.parseInt(cursor.getString(1))+1;
-            minid = Integer.parseInt(cursor.getString(0));
+            minnum = cursor.getInt(cursor.getColumnIndex("num"))+1;
         }
         String insersql = "insert into library(name,num,flag,single_num,multiple_num,judge_num) values(?,?,?,?,?,?)";
         for (int i = 0; i < max; i++) {
             db.execSQL(insersql, new Object[]{library.getLibrary_name(), minnum, 0, library.getSingle_num(),
                     library.getMultiple_num(), library.getJudge_num()});
-            Log.d("lz", "增加成功-" + library.toString());
         }
+        String mintestid = "select min(id) from library where num=?";
+        cursor = db.rawQuery(mintestid, new String[]{minnum+""});
+        cursor.moveToFirst();
+        minid = cursor.getInt(cursor.getColumnIndex("min(id)"))-1;
         return minnum + " " + minid;
     }
     //查看题库名是否重复
@@ -161,14 +162,15 @@ public class LibraryAndTestDB {
         String tmp = "";
         String sql1 = "select count(*) from library where name=? and flag = 1";
         String sql2 = "select count(*) from library where name=?";
-        Cursor cursor = db.rawQuery(sql1, null);
+        Cursor cursor = db.rawQuery(sql2, new String[]{libraryname});
         if(!(cursor.getCount() == 0)){
             cursor.moveToFirst();
             tmp = cursor.getString(cursor.getColumnIndex("count(*)"));
-            cursor = db.rawQuery(sql2, null);
+            cursor = db.rawQuery(sql1, new String[]{libraryname});
             if(!(cursor.getCount() == 0)){
                 cursor.moveToFirst();
-                tmp = tmp+"/"+cursor.getString(cursor.getColumnIndex("count(*)"));
+                String tmp1 = cursor.getString(cursor.getColumnIndex("count(*)"));
+                tmp = tmp1+"/"+tmp;
             }
         }
         return tmp;

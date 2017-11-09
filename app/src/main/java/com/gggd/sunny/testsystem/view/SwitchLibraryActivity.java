@@ -1,8 +1,10 @@
 package com.gggd.sunny.testsystem.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -69,6 +71,7 @@ public class SwitchLibraryActivity extends TitleActivity implements AdapterView.
         if(tmplist.isEmpty()){
             Intent it = new Intent(SwitchLibraryActivity.this, MainActivity.class);
             startActivity(it);
+            finish();
         }else{
             librarylist = new ArrayList<>();
             librarylist = libraryAndTestDB.getLibraryInfo(tmplist);
@@ -87,6 +90,8 @@ public class SwitchLibraryActivity extends TitleActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
         final Library library = librarylist.get(position);
+        final SharedPreferences mySharedPreferences= this.getSharedPreferences("librarydata",
+                Activity.MODE_PRIVATE);
         if(library.getLibrary_name().equals(librarname))
             Toast.makeText(this, "当前题库即为"+librarname, Toast.LENGTH_SHORT).show();
         else {
@@ -96,6 +101,9 @@ public class SwitchLibraryActivity extends TitleActivity implements AdapterView.
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 点击“确认”后的操作
+                            SharedPreferences.Editor editor = mySharedPreferences.edit();
+                            editor.putString("libraryname", library.getLibrary_name());
+                            editor.commit();
                             Intent it = new Intent();
                             it.putExtra("libraryname", library.getLibrary_name());
                             it.putExtra("testok", library.getTime());

@@ -21,9 +21,6 @@ import static com.gggd.sunny.testsystem.R.id.tvsinglefilepath;
 
 
 public class InputLibraryActivity extends TitleActivity implements View.OnClickListener {
-    private Button mbtnsinglefile;
-    private Button mbtnmultiplefile;
-    private Button mbtnjudgefile;
     private Button mbtnselectok;
     private Button mbtnselectreset;
     private TextView mtvsinglefilepath;
@@ -118,7 +115,6 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         if (null != cursor && cursor.moveToFirst()) {
-            ;
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);
             cursor.close();

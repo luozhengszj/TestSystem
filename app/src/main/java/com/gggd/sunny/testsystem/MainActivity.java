@@ -34,10 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static com.gggd.sunny.testsystem.R.id.btnallquestiontitle;
-import static java.lang.String.valueOf;
-
-//import com.gggd.sunny.testsystem.tools.FileCreate;
-
 
 public class MainActivity extends TitleActivity implements View.OnClickListener {
     private Button btninputlibrary;
@@ -89,11 +85,19 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                 Activity.MODE_PRIVATE);
         // 使用getString方法获得value，注意第2个参数是value的默认值
         libraryname = sharedPreferences.getString("libraryname", "欢迎使用");
-        String testcount = sharedPreferences.getString("testcount", "您好");
-        String testxg = sharedPreferences.getString("testxg", "");
-        String testless = sharedPreferences.getString("testless", "");
+
+        libraryAndTestDB = new LibraryAndTestDB(this);
+        libraryAndTestDB.existLibrary(libraryname);
+        String tmpflag = libraryAndTestDB.existLibrary(libraryname);
+        String tmppercent = "";
+        if(tmpflag.equals("0"))
+            tmppercent = "您好";
+        else{
+            tmppercent = libraryAndTestDB.getPercent(libraryname);
+        }
         mtvlibraryname.setText(libraryname);
-        mtvlibrarypercent.setText(testless + testxg + testcount);
+        mtvlibrarypercent.setText(tmppercent);
+
 
         btninputlibrary = (Button) findViewById(R.id.btninputlibrary);
         btninputlibrary.setOnClickListener(this);
@@ -186,7 +190,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             Log.d("showlz", list.get(0).toString());
             SelectQuestionDB selectquestiondb = new SelectQuestionDB(this);
             String sql1 = "select * from question where test_id=?";
-            ArrayList<Question> questionlist = selectquestiondb.selectAllQuestion(sql1, valueOf(list.get(0).getId()));
+            Log.d("lz",list.get(0).getId()+"");
+            ArrayList<Question> questionlist = selectquestiondb.selectAllQuestion(sql1, list.get(0).getId()+"");
             intent = new Intent(MainActivity.this, TestsActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("questionlist", questionlist);
@@ -299,14 +304,12 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                             String tmplibrayname = libraryAndTestDB.deleteLibrary2(flag);
                             Toast.makeText(MainActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
                             if (input.equals(libraryname)) {
+                                //实例化SharedPreferences.Editor对象（第二步）
+                                SharedPreferences.Editor editor = mySharedPreferences.edit();
                                 if (tmplibrayname.equals(" ")) {
                                     libraryname = "欢迎使用";
                                     mtvlibraryname.setText("欢迎使用");
                                     mtvlibrarypercent.setText("");
-
-                                    //实例化SharedPreferences.Editor对象（第二步）
-                                    SharedPreferences.Editor editor = mySharedPreferences.edit();
-                                    editor.putString("testcount", "你好");
                                     editor.putString("libraryname", "欢迎使用");
                                     editor.commit();
                                 } else {
@@ -314,6 +317,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                                     libraryname = tmplibrayname;
                                     mtvlibraryname.setText(tmplibrayname);
                                     mtvlibrarypercent.setText(tmppercent);
+                                    editor.putString("libraryname", tmplibrayname);
+                                    editor.commit();
                                 }
                             }
                         }
@@ -404,6 +409,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             Intent intent = new Intent("com.gggd.sunny.activity");
             intent.putExtra("closeAll", 1);
             sendBroadcast(intent);//发送广播
+            finish();
         }
     }
 

@@ -28,7 +28,7 @@ public class Question implements Parcelable{
 
     @Override
     public String toString() {
-        return id+" . "+topic;
+        return topic;
     }
 
     public Question() {

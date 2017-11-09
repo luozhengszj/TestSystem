@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
  * Created by Sunny on 2017/11/3.
  */
 
-public class SearchActivity extends TitleActivity {
+public class SearchActivity extends TitleActivity implements AdapterView.OnItemClickListener{
 
     private SearchView searchview;
     private ArrayList<Question> list = new ArrayList<Question>();
@@ -53,7 +55,6 @@ public class SearchActivity extends TitleActivity {
         mbtn_farward.setText("切换");
         initData();
         initView();
-
         mbtn_farward.setOnClickListener(this);
     }
 
@@ -117,6 +118,7 @@ public class SearchActivity extends TitleActivity {
         searchview.setQueryHint("请输入你要查询的关键字");
         searchview.setIconified(false);
         searchview.setIconifiedByDefault(false);
+        listv.setOnItemClickListener(this);
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -152,7 +154,7 @@ public class SearchActivity extends TitleActivity {
                 sql = "select * from question where library_num=?";
             }
             wrongAndCollectDB = new WrongAndCollectDB(this);
-            list = wrongAndCollectDB.getWrongandCollect(sql, librarynum);
+            list = wrongAndCollectDB.getWrongandCollectNum(sql, librarynum);
         }
     }
     //监听返回键
@@ -163,5 +165,54 @@ public class SearchActivity extends TitleActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        adapter.setSelectItem(position);
+        adapter.notifyDataSetInvalidated();
+        Question question = list.get(position);
+        String type =question.getType();
+        String[] st;
+        if(type.equals("1") || type.equals("2")) {
+            st = new String[question.getScore()+2] ;
+            Log.d("lz",question.getScore()+2+"");
+            st[0] =  question.getTopic();
+            st[1] = question.getOption_a();
+            st[2] = question.getOption_b();
+            if(question.getOption_c() != null){
+                st[3] = question.getOption_c();
+                if(question.getOption_d() != null){
+                    st[4] = question.getOption_d();
+                    if(question.getOption_e() != null){
+                        st[5] = question.getOption_e();
+                        if(question.getOption_f() != null){
+                            st[6] = question.getOption_f();
+                            st[7] = "正确答案:"+question.getOption_t();
+                        }
+                        else{
+                            st[6] = "正确答案:"+question.getOption_t();
+                        }
+                    }
+                    else{
+                        st[5] = "正确答案:"+question.getOption_t();
+                    }
+                }
+                else{
+                    st[4] = "正确答案:"+question.getOption_t();
+                }
+            }else{
+                st[3] = "正确答案:"+question.getOption_t();
+            }
+
+        }else{
+            st = new String[2] ;
+            st[0] =  question.getTopic();
+            st[1] = "正确答案："+question.getOption_t();
+        }
+        new AlertDialog.Builder(SearchActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                .setIcon(android.R.drawable.divider_horizontal_bright).
+                setItems(st, null).show();
     }
 }

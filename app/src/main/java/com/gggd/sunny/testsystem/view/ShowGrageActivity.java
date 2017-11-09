@@ -1,8 +1,6 @@
 package com.gggd.sunny.testsystem.view;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -98,18 +96,6 @@ public class ShowGrageActivity extends TitleActivity {
             library.setTime(time);
             library.setScore(""+count);
             wrongAndCollectDB.updateWrongQuestion(list,library);
-            SharedPreferences sharedPreferences = getSharedPreferences("librarydata",
-                    Activity.MODE_PRIVATE);
-            // 使用getString方法获得value，注意第2个参数是value的默认值
-            libraryname = sharedPreferences.getString("libraryname", "欢迎使用!");
-            String testcount =sharedPreferences.getString("testcount", "您好");
-            String testless =sharedPreferences.getString("testless", ""+0);
-            //实例化SharedPreferences.Editor对象（第二步）
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            //用putString的方法保存数据
-            editor.putString("testless", Integer.parseInt(testless)+1+"");
-            //提交当前数据
-            editor.commit();
         }
         mtvshowgradetrue.setText(valueOf(truenum));
         mtvshowgradefalse.setText(valueOf(falsenum));
@@ -123,6 +109,7 @@ public class ShowGrageActivity extends TitleActivity {
             case R.id.button_forward:
                 intent = new Intent(ShowGrageActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.btnshowgradeall:
                 intent = new Intent(ShowGrageActivity.this,AllAndWrongActivity.class);
@@ -132,6 +119,7 @@ public class ShowGrageActivity extends TitleActivity {
                 bundle.putInt("test_id",-1);
                 intent.putExtras(bundle);
                 ShowGrageActivity.this.startActivity(intent);
+                finish();
                 break;
             case R.id.btnshowgradefalse:
                 if (falselist.isEmpty()){
@@ -144,6 +132,7 @@ public class ShowGrageActivity extends TitleActivity {
                     bundle1.putInt("test_id", 0);
                     intent.putExtras(bundle1);
                     ShowGrageActivity.this.startActivity(intent);
+                    finish();
                 }
                 break;
             case R.id.btnshowgradecontinue:
@@ -182,6 +171,7 @@ public class ShowGrageActivity extends TitleActivity {
             bundle.putString("libraryname",libraryname);
             intent.putExtras(bundle);
             startActivityForResult(intent, 100);
+            finish();
         }
     }
 }
