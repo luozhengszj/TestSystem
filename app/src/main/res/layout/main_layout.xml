@@ -260,11 +260,14 @@
             android:layout_weight="1.8"
             android:divider="@drawable/layout_line">
 
-            <ImageView
-                android:id="@+id/img_loading"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <TextView
+
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="12dp"
+                android:textColor="#636363"
+        android:text="© 2017 贵港信息中心, sunny."/>
 
         </LinearLayout>
 </LinearLayout>

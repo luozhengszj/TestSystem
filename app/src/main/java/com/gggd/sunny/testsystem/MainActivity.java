@@ -374,6 +374,9 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         FileCreate f = new FileCreate();
         int daochunum = f.createFile(qlist, libraryname+" "+date);
         Toast.makeText(MainActivity.this, "导出了" + daochunum + "条数据", Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                .setIcon(android.R.drawable.divider_horizontal_bright)
+                .setItems(new String[]{"   保存在SD>TestSystem>."},null).show();
     }
 
 
