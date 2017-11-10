@@ -2,8 +2,10 @@ package com.gggd.sunny.testsystem;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import static com.gggd.sunny.testsystem.R.id.tvsinglefilepath;
 
 
@@ -29,16 +33,28 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
 
     private int flag = 0;
     private Button mbuttonbackward;
+    private Button mbuttonforward;
+    private TextView mtvinputfile;
 
     private String path;
+    private String pathtype;
+    private String filetype;
+    private File file;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.input_library);
         setTitle("导入题库");
-        showForwardView(false);
+        showForwardView(true);
         mbuttonbackward = (Button) findViewById(R.id.button_backward);
+        mbuttonforward = (Button) findViewById(R.id.button_forward);
+        mtvinputfile = (TextView) findViewById(R.id.tvinputfile);
+        mbuttonforward.setText("切换");
+        mbuttonforward.setOnClickListener(this);
+        pathtype = "/sdcard/tencent/MicroMsg/Download/";
+        filetype = "application/vnd.ms-excel";
+
         mbtnselectok = (Button) findViewById(R.id.btnselectok);
         mbtnselectreset = (Button) findViewById(R.id.btnselectreset);
         mbtnselectok.setOnClickListener(this);
@@ -54,21 +70,29 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        file = new File(pathtype);
+        if (null == file || !file.exists()) {
+            Toast.makeText(this, "不存在该目录", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/*,excel/*");//无类型限制
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+//      intent.addCategory(Intent.CATEGORY_DEFAULT);
+//      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//      intent.setDataAndType(Uri.fromFile(file), "file/*");
+        intent.setDataAndType(Uri.fromFile(file), filetype);
         switch (v.getId()) {
             case R.id.tvsinglefilepath:
                 flag = 1;
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, flag);
                 break;
             case R.id.tvmultiplefilepath:
                 flag = 2;
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, flag);
                 break;
             case R.id.tvjudgefilepath:
                 flag = 3;
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, flag);
                 break;
             case R.id.btnselectreset:
                 mtvsinglefilepath.setText("");
@@ -86,7 +110,8 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
             case R.id.button_backward:
                 super.onClick(v);
                 break;
-            default:
+            case R.id.button_forward:
+                qiehuanpath();
                 break;
         }
     }
@@ -272,5 +297,34 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
      */
     public boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public void qiehuanpath() {
+        new AlertDialog.Builder(InputLibraryActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                .setIcon(android.R.drawable.divider_horizontal_bright)
+                .setItems(new String[]{"                        微      信",
+                                "                        企      鹅"},
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                switch (which) {
+                                    case 0:
+                                        pathtype = "/sdcard/tencent/MicroMsg/Download/";;
+                                        mtvinputfile.setText("微信文件夹");
+                                        break;
+                                    case 1:
+                                        filetype = "application/vnd.ms-excel";
+                                        mtvinputfile.setText("企鹅文件夹");
+                                        break;
+//                                    case 2:
+//                                        pathtype = "/sdcard/comtop.im/";
+//                                        filetype = "excel/*";
+//                                        mtvinputfile.setText("企信文件夹");
+//                                        Toast.makeText(InputLibraryActivity.this, "请到comtop.im/../userdatas/FileRecv/下", Toast.LENGTH_SHORT).show();
+//                                        break;
+                                }
+                            }
+                        }).show();
     }
 }

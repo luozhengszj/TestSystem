@@ -7,17 +7,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:drawableLeft="@drawable/file_picture"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:text="   选 择 文 件"/>
+        android:layout_weight="0.2" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:drawableLeft="@drawable/file_picture"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="   选 择 文 件"/>
+    <TextView
+        android:id="@+id/tvinputfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#636363"
+        android:layout_marginTop="10dp"
+        android:textSize="14dp"
+        android:text="微信文件夹"/>
 
 
     <LinearLayout
@@ -30,7 +39,7 @@
             android:layout_marginLeft="10dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/design_view_point"
+            android:background="@null"
             android:textSize="20dp"
             android:layout_gravity="center"
             android:gravity="center"
@@ -54,7 +63,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Button
-            android:background="@drawable/design_view_point"
+            android:background="@null"
             android:layout_marginLeft="10dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -83,17 +92,18 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/button"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/design_view_point"
-            android:textSize="20dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
             android:gravity="center"
-            android:text="判断" />
+            android:text="判断"
+            android:textSize="20dp" />
 
         <TextView
-        	android:id="@+id/tvjudgefilepath"
+            android:id="@+id/tvjudgefilepath"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
@@ -118,18 +128,23 @@
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:background="#B2DFEE"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:textSize="20dp"
             android:text="重置"/>
+
         <Button
             android:id="@+id/btnselectok"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="30dp"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
             android:background="#97cbff"
-            android:textSize="20dp"
-            android:text="确定"/>
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="确定"
+            android:textSize="20dp" />
     </LinearLayout>
 
 </LinearLayout>

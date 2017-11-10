@@ -91,9 +91,9 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         libraryAndTestDB.existLibrary(libraryname);
         String tmpflag = libraryAndTestDB.existLibrary(libraryname);
         String tmppercent = "";
-        if(tmpflag.equals("0"))
+        if (tmpflag.equals("0"))
             tmppercent = "您好";
-        else{
+        else {
             tmppercent = libraryAndTestDB.getPercent(libraryname);
         }
         mtvlibraryname.setText(libraryname);
@@ -155,7 +155,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             case R.id.btncollecttitle:
                 intoSearch(2);
                 break;
-            case btnallquestiontitle:
+            case R.id.btnallquestiontitle:
                 intoSearch(3);
                 break;
             case R.id.tvlibraryname:
@@ -188,8 +188,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             Log.d("showlz", list.get(0).toString());
             SelectQuestionDB selectquestiondb = new SelectQuestionDB(this);
             String sql1 = "select * from question where test_id=?";
-            Log.d("lz",list.get(0).getId()+"");
-            ArrayList<Question> questionlist = selectquestiondb.selectAllQuestion(sql1, list.get(0).getId()+"");
+            Log.d("lz", list.get(0).getId() + "");
+            ArrayList<Question> questionlist = selectquestiondb.selectAllQuestion(sql1, list.get(0).getId() + "");
             intent = new Intent(MainActivity.this, TestsActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("questionlist", questionlist);
@@ -287,7 +287,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     public void deleteLibrary() {
         libraryAndTestDB = new LibraryAndTestDB(this);
         final EditText et = new EditText(this);
-        final SharedPreferences mySharedPreferences= this.getSharedPreferences("librarydata",
+        final SharedPreferences mySharedPreferences = this.getSharedPreferences("librarydata",
                 Activity.MODE_PRIVATE);
         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT).setTitle("输入需要删除的题库名")
                 .setIcon(null)
@@ -352,48 +352,58 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     }
 
     public void outQuestion(int type) {
-        SelectQuestionDB selectdb = new SelectQuestionDB(MainActivity.this);
-        int tmpnum = selectdb.getLibrarynum(libraryname);
-        String sql;
-        ArrayList<Question> qlist = new ArrayList<>();
-        if (type == 0) {
-            sql = "select topic,option_a,option_b,option_c,option_d,option_e,option_f,option_t from question where library_num="+tmpnum+" group by(question_id)";
-            qlist = selectdb.getQuestion(sql);
-        } else if (type == 1) {
-            sql = "select * from question where library_num="+tmpnum+" and id in(select question_id from collect_wrong where collect_flag='1')";
-            qlist = selectdb.getQuestion(sql);
-        } else {
-            sql = "select * from question where library_num="+tmpnum+" and id in(select question_id from collect_wrong where wrong_flag='0')";
-            qlist = selectdb.getQuestion(sql);
+        if (libraryname.equals("欢迎使用"))
+            Toast.makeText(this, "先增加题库", Toast.LENGTH_SHORT).show();
+        else {
+            SelectQuestionDB selectdb = new SelectQuestionDB(MainActivity.this);
+            int tmpnum = selectdb.getLibrarynum(libraryname);
+            String sql;
+            ArrayList<Question> qlist = new ArrayList<>();
+            if (type == 0) {
+                sql = "select topic,option_a,option_b,option_c,option_d,option_e,option_f,option_t from question where library_num=" + tmpnum + " group by(question_id)";
+                qlist = selectdb.getQuestion(sql);
+            } else if (type == 1) {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where collect_flag='1')";
+                qlist = selectdb.getQuestion(sql);
+            } else {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where wrong_flag='0')";
+                qlist = selectdb.getQuestion(sql);
+            }
+            Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("MM-dd hh-mm");
+            String date = sDateFormat.format(curDate);
+            FileCreate f = new FileCreate();
+            int daochunum = f.createFile(qlist, libraryname + " " + date);
+            Toast.makeText(MainActivity.this, "导出了" + daochunum + "条数据", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                    .setIcon(android.R.drawable.divider_horizontal_bright)
+                    .setItems(new String[]{"   保存在SD>TestSystem>."}, null).show();
         }
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("MM-dd hh-mm");
-        String date = sDateFormat.format(curDate);
-        FileCreate f = new FileCreate();
-        int daochunum = f.createFile(qlist, libraryname+" "+date);
-        Toast.makeText(MainActivity.this, "导出了" + daochunum + "条数据", Toast.LENGTH_SHORT).show();
-        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
-                .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"   保存在SD>TestSystem>."},null).show();
     }
+
     //关于我们
-    public void anboutOus(){
+    public void anboutOus() {
         new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"1.导入文件仅接受.xls;格式为：题目、选项(多选题最多支持六个选项)、正确答案(A.B..或正确错误)",
-                        "2.导出的excel第一行即为导入第一道题",
-                        "3.除了正确答案无需在选项或者题目单元格增加其他内容，如A...","----欢迎访问Github"},
+                .setItems(new String[]{"                        使用说明",
+                                "1.导入文件仅接受.xls",
+                                "2.格式:题目、选项(最多六个)、答案",
+                                "3.选项无须AB，答案直接AB选项",
+                                "4.excel第一行即为导入第一道题",
+                                "5.导出文件于SD卡/TestSystem/",
+                                "                            end"},
                         new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(which==3){
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
-                    intent.setData(content_url);
-                    startActivity(intent);
-                }
-            }}).show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 3) {
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
+                                    intent.setData(content_url);
+                                    startActivity(intent);
+                                }
+                            }
+                        }).show();
     }
 
     public static void verifyStoragePermissions(Activity activity) {
