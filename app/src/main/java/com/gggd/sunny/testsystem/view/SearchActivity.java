@@ -84,16 +84,19 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
                                         type = 1;
                                         initData();
                                         initView();
+                                        searchview.setFocusable(false);
                                         break;
                                     case 1:
                                         type = 2;
                                         initData();
                                         initView();
+                                        searchview.setFocusable(false);
                                         break;
                                     case 2:
                                         type = 3;
                                         initData();
                                         initView();
+                                        searchview.setFocusable(false);
                                         break;
                                 }
                             }
@@ -110,6 +113,7 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
             setTitle("全部题目");
         }
         searchview = (SearchView) findViewById(R.id.searchView);
+        searchview.setFocusable(false);
         listv = (ListView) findViewById(R.id.lvshowquestion);
         adapter = new MyAdapter<Question>(this, list);
         listv.setAdapter(adapter);
@@ -133,6 +137,7 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
                 if (queryText.length() >= 2) {
                     adapter.getFilter().filter(queryText);
                 }
+                searchview.setFocusable(false);
                 return true;
             }
         });
@@ -177,18 +182,21 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
         String[] st;
         if(type.equals("1") || type.equals("2")) {
             st = new String[question.getScore()+2] ;
-            Log.d("lz",question.getScore()+2+"");
+            Log.d("lz",question.getScore()+2+"  "+(question.getOption_c() == null)+
+                    (question.getOption_e()== null));
+            Log.d("lz",question.getScore()+3+"  "+("".equals(question.getOption_c()))+
+                    ("".equals(question.getOption_e())));
             st[0] =  question.getTopic();
-            st[1] = question.getOption_a();
-            st[2] = question.getOption_b();
-            if(question.getOption_c() != null){
-                st[3] = question.getOption_c();
-                if(question.getOption_d() != null){
-                    st[4] = question.getOption_d();
-                    if(question.getOption_e() != null){
-                        st[5] = question.getOption_e();
-                        if(question.getOption_f() != null){
-                            st[6] = question.getOption_f();
+            st[1] = "A."+question.getOption_a();
+            st[2] = "B."+question.getOption_b();
+            if(!"".equals(question.getOption_c())){
+                st[3] = "C."+question.getOption_c();
+                if(!"".equals(question.getOption_d()) && null != question.getOption_d()){
+                    st[4] = "D."+question.getOption_d();
+                    if(!"".equals(question.getOption_e()) && null != question.getOption_e()){
+                        st[5] = "E."+question.getOption_e();
+                        if(!"".equals(question.getOption_f()) && null != question.getOption_f()){
+                            st[6] = "F."+question.getOption_f();
                             st[7] = "正确答案:"+question.getOption_t();
                         }
                         else{

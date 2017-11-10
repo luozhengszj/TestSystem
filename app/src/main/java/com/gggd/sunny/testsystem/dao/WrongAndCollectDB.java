@@ -97,21 +97,21 @@ public class WrongAndCollectDB {
             String option_a = cursor.getString(cursor.getColumnIndex("option_a"));
             String option_b = cursor.getString(cursor.getColumnIndex("option_b"));
             String option_c = cursor.getString(cursor.getColumnIndex("option_c"));
-            if(option_c != null){
-                optionnum = 3;
-            }
             String option_d = cursor.getString(cursor.getColumnIndex("option_d"));
-            if(option_d != null){
-                optionnum = 4;
-            }
             String option_e = cursor.getString(cursor.getColumnIndex("option_e"));
-            if(option_e != null){
-                optionnum = 5;
-            }
             String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
-            if(option_f != null){
+
+            if("".equals(option_c) || null == option_c)
+                optionnum = 2;
+            else if("".equals(option_d) || null == option_d)
+                optionnum = 3;
+            else if("".equals(option_e) || null == option_e)
+                optionnum = 4;
+            else if("".equals(option_f) || null == option_f)
+                optionnum = 5;
+            else
                 optionnum = 6;
-            }
+
             String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
             String wrong_flag = cursor.getString(cursor.getColumnIndex("wrong_flag"));
             String option_answer = "";
