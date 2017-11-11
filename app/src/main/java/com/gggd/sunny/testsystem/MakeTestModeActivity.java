@@ -3,6 +3,7 @@ package com.gggd.sunny.testsystem;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.gggd.sunny.testsystem.bean.Library;
 import com.gggd.sunny.testsystem.bean.Question;
 import com.gggd.sunny.testsystem.dao.InsertQuestionDB;
 import com.gggd.sunny.testsystem.dao.LibraryAndTestDB;
+import com.gggd.sunny.testsystem.tools.CustomDialog;
 import com.gggd.sunny.testsystem.tools.FileTools;
 
 import java.util.LinkedList;
@@ -43,6 +45,7 @@ public class MakeTestModeActivity extends TitleActivity {
 
 
     private String defaultliabraryname;
+    private MyTask mTask;
 
     //单选题是否有路径文件
     private int sflag = 0;
@@ -107,7 +110,10 @@ public class MakeTestModeActivity extends TitleActivity {
                 }
                 break;
             case R.id.btnmakelibraryok:
-                clickOK();
+                if (makeTestLimit()) {
+                    mTask = new MyTask();
+                    mTask.execute();
+                }
                 break;
         }
     }
@@ -118,7 +124,7 @@ public class MakeTestModeActivity extends TitleActivity {
             sflag = 1;
             int start = singlepath.lastIndexOf("/");
             int end = singlepath.lastIndexOf(".");
-            String suffixname = singlepath.substring(start+1, end);
+            String suffixname = singlepath.substring(start + 1, end);
             if (suffixname.length() > 10)
                 suffixname = suffixname.substring(1, 11);
             metlibraryname.setText(suffixname);
@@ -132,7 +138,7 @@ public class MakeTestModeActivity extends TitleActivity {
             mflag = 1;
             int start = multiplefilepath.lastIndexOf("/");
             int end = multiplefilepath.lastIndexOf(".");
-            String suffixname = multiplefilepath.substring(start+1, end);
+            String suffixname = multiplefilepath.substring(start + 1, end);
             if (suffixname.length() > 10)
                 suffixname = suffixname.substring(1, 11);
             metlibraryname.setText(suffixname);
@@ -146,7 +152,7 @@ public class MakeTestModeActivity extends TitleActivity {
             jflag = 1;
             int start = judgefilepath.lastIndexOf("/");
             int end = judgefilepath.lastIndexOf(".");
-            String suffixname = judgefilepath.substring(start+1, end);
+            String suffixname = judgefilepath.substring(start + 1, end);
             if (suffixname.length() > 10)
                 suffixname = suffixname.substring(1, 11);
             metlibraryname.setText(suffixname);
@@ -158,57 +164,13 @@ public class MakeTestModeActivity extends TitleActivity {
         }
     }
 
-    public void clickOK() {
-        //下面的函数是为了检查试卷的设置情况，有限制
-        //限制1.试卷的每一类题目数目不得超过该类题目的总题目数
-        //限制2.试卷的总分必须为100分。
-        Library library = new Library();
-        library.setLibrary_name(metlibraryname.getText().toString());
-        library.setSingle_num("" + metsinglenum.getText().toString());
-        library.setSingle_score("" + metsinglesorce.getText().toString());
-        library.setMultiple_num("" + metmultiplenum.getText().toString());
-        library.setMultiple_score("" + metmultiplesorce.getText().toString());
-        library.setJudge_num("" + metjudgenum.getText().toString());
-        library.setJudge_score("" + metjudgesorce.getText().toString());
-        library.setSingle_path("" + singlefilepath);
-        library.setMultiple_path("" + multiplefilepath);
-        library.setJudge_path("" + judgefilepath);
-        if (makeTestLimit()) {
-            int limitnum = insertData(library);
-            if (limitnum != 0) {
-                SharedPreferences mySharedPreferences= this.getSharedPreferences("librarydata",
-                        Activity.MODE_PRIVATE);
-                //实例化SharedPreferences.Editor对象（第二步）
-                SharedPreferences.Editor editor = mySharedPreferences.edit();
-                
-                editor.putString("libraryname", library.getLibrary_name());
-                //提交当前数据
-                editor.commit();
-                Toast.makeText(this, "增加成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MakeTestModeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }
-    }
-
     public boolean makeTestLimit() {
-        boolean limitflag = false;
+        boolean limitflag = true;
         LibraryAndTestDB library = new LibraryAndTestDB(this);
         boolean namelimit = library.libraryNameLimit(metlibraryname.getText().toString());
         if (namelimit == false) {
             Toast.makeText(this, "题库名重复，请重新输入！", Toast.LENGTH_SHORT).show();
             limitflag = false;
-        } else {
-            int count = Integer.parseInt(0 + metsinglenum.getText().toString()) * Integer.parseInt(0 + metsinglesorce.getText().toString()) +
-                    Integer.parseInt(0 + metmultiplenum.getText().toString()) * Integer.parseInt(0 + metmultiplesorce.getText().toString()) +
-                    Integer.parseInt(0 + metjudgenum.getText().toString()) * Integer.parseInt(0 + metjudgesorce.getText().toString());
-            if (count == 100)
-                limitflag = true;
-            else {
-                Toast.makeText(this, "总分必须为100分！现在为:" + valueOf(count), Toast.LENGTH_SHORT).show();
-                limitflag = false;
-            }
         }
         return limitflag;
     }
@@ -271,6 +233,54 @@ public class MakeTestModeActivity extends TitleActivity {
             flagmax = 0;
         }
         return flagmax;
+    }
+
+    private class MyTask extends AsyncTask<String, Integer, String> {
+        Library library;
+        CustomDialog customDialog;
+
+        @Override
+        protected void onPreExecute() {
+            library = new Library();
+            library.setLibrary_name(metlibraryname.getText().toString());
+            library.setSingle_num("" + metsinglenum.getText().toString());
+            library.setSingle_score("" + metsinglesorce.getText().toString());
+            library.setMultiple_num("" + metmultiplenum.getText().toString());
+            library.setMultiple_score("" + metmultiplesorce.getText().toString());
+            library.setJudge_num("" + metjudgenum.getText().toString());
+            library.setJudge_score("" + metjudgesorce.getText().toString());
+            library.setSingle_path("" + singlefilepath);
+            library.setMultiple_path("" + multiplefilepath);
+            library.setJudge_path("" + judgefilepath);
+            customDialog = new CustomDialog(MakeTestModeActivity.this);
+            customDialog.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            insertData(library);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            customDialog.cancel();
+            customDialog = null;
+
+            SharedPreferences mySharedPreferences = MakeTestModeActivity.this.getSharedPreferences("librarydata",
+                    Activity.MODE_PRIVATE);
+            //实例化SharedPreferences.Editor对象（第二步）
+            SharedPreferences.Editor editor = mySharedPreferences.edit();
+
+            editor.putString("libraryname", library.getLibrary_name());
+            //提交当前数据
+            editor.commit();
+            Toast.makeText(MakeTestModeActivity.this, "增加成功！", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MakeTestModeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 }

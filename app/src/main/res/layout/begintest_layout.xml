@@ -28,8 +28,7 @@
                     android:layout_centerInParent="true"
                     android:gravity="end"
                     android:paddingLeft="5dp"
-                    android:textColor="@color/heise"
-                    android:visibility="gone"
+                    android:textColor="@color/main"
                     android:textSize="18dp"
                     android:text="正确为："/>
                 <TextView
@@ -40,7 +39,7 @@
                     android:layout_centerInParent="true"
                     android:gravity="end"
                     android:paddingRight="15dp"
-                    android:textColor="@color/heise"
+                    android:textColor="@color/main"
                     android:visibility="gone"
                     android:textSize="18dp" />
                 <TextView

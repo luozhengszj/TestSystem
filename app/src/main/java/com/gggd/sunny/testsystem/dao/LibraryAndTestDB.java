@@ -175,4 +175,49 @@ public class LibraryAndTestDB {
         }
         return tmp;
     }
+    public String[] getLibraryInfo(String libraryname){
+        String sqlsinglecount;
+        String sqlmultiplecount;
+        String sqljudgecount;
+        int singlecount;
+        int multiplecount;
+        int judgecount;
+        int collectcount;
+        int wrongcount;
+        String sqllibraryname = "select num from library where name=?";
+        Cursor cursor = db.rawQuery(sqllibraryname, new String[]{libraryname});
+        cursor.moveToFirst();
+        int librarynum = cursor.getInt(cursor.getColumnIndex("num"));
+        if(librarynum == 0){
+            return null;
+        }else {
+            sqlsinglecount = "select count(*) from collect_wrong where type=1 and question_id in " +
+                    "(select question_id from question where library_num=?)";
+            sqlmultiplecount = "select count(*) from collect_wrong where type=2 and question_id in " +
+                    "(select question_id from question where library_num=?)";
+            sqljudgecount = "select count(*) from collect_wrong where type=3 and question_id in " +
+                    "(select question_id from question where library_num=?)";
+            String sqlcollectcount = "select count(*) from collect_wrong where collect_flag=1 and question_id in " +
+                    "(select question_id from question where library_num=?)";
+            String sqlwrongcount = "select count(*) from collect_wrong where wrong_flag=1 and question_id in " +
+                    "(select question_id from question where library_num=?)";
+            cursor = db.rawQuery(sqlsinglecount, new String[]{librarynum+""});
+            cursor.moveToFirst();
+            singlecount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            cursor = db.rawQuery(sqlmultiplecount, new String[]{librarynum+""});
+            cursor.moveToFirst();
+            multiplecount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            cursor = db.rawQuery(sqljudgecount, new String[]{librarynum+""});
+            cursor.moveToFirst();
+            judgecount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            cursor = db.rawQuery(sqlcollectcount, new String[]{librarynum+""});
+            cursor.moveToFirst();
+            collectcount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            cursor = db.rawQuery(sqlwrongcount, new String[]{librarynum+""});
+            cursor.moveToFirst();
+            wrongcount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            return new String[]{"      单选题数目："+singlecount,"      多选题数目："+multiplecount,"      判断题数目："+judgecount,
+                    "      已收藏："+collectcount,"      目前错题："+wrongcount,};
+        }
+    }
 }

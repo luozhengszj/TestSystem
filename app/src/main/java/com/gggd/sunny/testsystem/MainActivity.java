@@ -158,8 +158,6 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             case R.id.btnallquestiontitle:
                 intoSearch(3);
                 break;
-            case R.id.tvlibraryname:
-                break;
             case R.id.btnqiehuan:
                 showADialog();
                 break;
@@ -171,6 +169,9 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                 break;
             case R.id.btnabout:
                 anboutOus();
+                break;
+            case R.id.tvlibraryname:
+                showLibrarInfo();
                 break;
         }
     }
@@ -405,7 +406,26 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                             }
                         }).show();
     }
-
+    //题库信息
+    public void showLibrarInfo(){
+        String[] ss;
+        if(libraryname.equals("欢迎使用") ){
+            ss = new String[]{
+                    "       GitHub name,luozhengszj.",
+                    "                                           by sunny"};
+        }else{
+            libraryAndTestDB = new LibraryAndTestDB(this);
+            ss = libraryAndTestDB.getLibraryInfo(libraryname);
+            if(ss == null){
+                ss = new String[]{
+                        "       GitHub name,luozhengszj.",
+                        "                                           by sunny"};
+            }
+        }
+        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
+                .setIcon(android.R.drawable.divider_horizontal_bright)
+                .setItems(ss,null).show();
+    }
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity,

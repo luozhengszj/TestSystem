@@ -61,6 +61,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
     private CheckBox mcbquestionmultiple4;
     private CheckBox mcbquestionmultiple5;
     private CheckBox mcbquestionmultiple6;
+    private TextView mtvquestiontrue;
 
     private ArrayList<Question> list;
     //列表
@@ -102,6 +103,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         nownum = 1;
         mtvquestionlist.setText(nownum + "/" + size);
 
+        mtvquestiontrue = (TextView) findViewById(R.id.tvquestiontruetext);
         mbtnabovetquestion = (Button) findViewById(R.id.btnabovetquestion);
         mbtnnextquestion = (Button) findViewById(R.id.btnnextquestion);
         mtvquestionlist = (TextView) findViewById(R.id.tvquestionlist);
@@ -226,6 +228,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
 
     //这是题目的显示
     public void selectTypeShow(Question question) {
+
         String type = question.getType();
         String selectTypeShowanswer = question.getAnswer();
         mrgquestionjedge.clearCheck();
@@ -236,6 +239,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             mcbncollectquestion.setChecked(false);
         }
         if (type.equals("1")) {
+            mtvquestiontrue.setText("单选题");
             mlayoutcheck.setVisibility(View.GONE);
             mrgquestionjedge.setVisibility(View.GONE);
             mrgquestionsingle.setVisibility(View.VISIBLE);
@@ -259,6 +263,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 mrbquestionsingle4.setChecked(true);
             }
         } else if (type.equals("3")) {
+            mtvquestiontrue.setText("判断题");
             mlayoutcheck.setVisibility(View.GONE);
             mrgquestionsingle.setVisibility(View.GONE);
             mrgquestionjedge.setVisibility(View.VISIBLE);
@@ -271,6 +276,7 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 mrbquestionjedge2.setChecked(true);
             }
         } else if (type.equals("2")) {
+            mtvquestiontrue.setText("多选题");
             mrgquestionjedge.setVisibility(View.GONE);
             mrgquestionsingle.setVisibility(View.GONE);
             mcbquestionmultiple1.setChecked(false);

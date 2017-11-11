@@ -5,4 +5,11 @@
         <item name="android:windowNoTitle">true</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="CustomDialog" parent="Base.Widget.AppCompat.ProgressBar">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorAccent">#ffE91E63</item>
+    </style>
+
 </resources>

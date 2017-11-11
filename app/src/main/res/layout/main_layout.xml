@@ -18,6 +18,7 @@
             android:layout_weight="1"
             android:paddingLeft="10dp"
             android:paddingStart="20dp"
+            android:textColor="@color/main"
             android:textSize="20sp" />
 
         <TextView
@@ -26,6 +27,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:textColor="@color/main"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -271,7 +273,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="© 2017 贵港信息中心, sunny."
-            android:textColor="#636363"
+            android:textColor="@color/main"
             android:textSize="12dp" />
 
     </LinearLayout>
