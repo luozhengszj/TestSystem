@@ -23,7 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gggd.sunny.testsystem.MainActivity;
 import com.gggd.sunny.testsystem.R;
 import com.gggd.sunny.testsystem.TitleActivity;
 import com.gggd.sunny.testsystem.bean.Question;
@@ -90,13 +89,13 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         mGestureDetector = new GestureDetector(this, myGestureListener);
         mbtnbutton_forward = (Button) findViewById(R.id.button_forward);
         mtvquestionlist = (TextView) findViewById(R.id.tvquestionlist);
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         list = bundle.getParcelableArrayList("questionlist");
         libraryname = bundle.getString("libraryname");
         setTitle(libraryname);
         showForwardView(true);
+        showBackwardView(false);
         test_id = bundle.getInt("test_id");
         Log.d("tests lztest_id", "" + test_id);
         size = list.size();
@@ -155,15 +154,14 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
         if (test_id == -2) {
             questionnow = list.get(0);
         }
-        showBackwardView(false);
         mbtnbutton_forward.setText("交卷");
         mrgquestionsingle.setOnCheckedChangeListener(this);
         mrgquestionjedge.setOnCheckedChangeListener(this);
 
-        mdbtoggle = new ActionBarDrawerToggle(this, mdlquestionlist, R.drawable.sanheng,
+        mdbtoggle = new ActionBarDrawerToggle(this, mdlquestionlist, R.drawable.delete,
                 R.string.testdrawer_open, R.string.testdrawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
+                @Override
+                public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 mbtnbutton_forward.setText("列表");
                 mbtnbutton_forward.setEnabled(false);
@@ -217,11 +215,6 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
                 }
             case R.id.button_forward:
                 checkAnswer();
-                break;
-            case R.id.button_backward:
-                Intent it = new Intent(TestsActivity.this, MainActivity.class);
-                TestsActivity.this.startActivity(it);
-                this.onDestroy();
                 break;
         }
     }

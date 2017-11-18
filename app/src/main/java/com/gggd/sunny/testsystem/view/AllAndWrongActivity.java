@@ -130,13 +130,7 @@ public class AllAndWrongActivity extends TitleActivity implements
         mbtnbutton_forward.setOnClickListener(this);
         mcbncollectquestion.setOnCheckedChangeListener(this);
 
-        //拉出抽屉
-
-        //test_id == 0,这是错题查看、所有题目查看的时候
-        //浏览题目，只需要上一题、下一题、题目跳转、根据答案选题目
-        //所以事件只需要上一题、下一题、题目跳转，不需要监控选项变化
-        //同时设置“交卷”为“返回”，返回（包括返回键）即返回到主页
-        //test_id !=0的时候，说明是考试（在这里就是错题考试）
+        //test_id
         mlvquestionlist = (ListView) findViewById(R.id.test_drawer);
         if (test_id == 0) {
             flag = true;

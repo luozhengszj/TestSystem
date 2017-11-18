@@ -124,7 +124,6 @@ public class FileTools {
                     HSSFCell option_t = hssfRow.getCell(7);
                     question = new Question(getValue(topic), getValue(option_a), getValue(option_b), getValue(option_c),
                             getValue(option_d), getValue(option_e), getValue(option_f), getValue(option_t));
-                    Log.d("lz", question.toString());
                     list.add(question);
                 }
             }
@@ -179,19 +178,4 @@ public class FileTools {
         }
         return cellValue;
     }
-    //判断行为空
-//    private int CheckRowNull(HSSFRow hssfRow){
-//        int num = 0;
-//        Iterator<Cell> cellItr =hssfRow.iterator();
-//        while(cellItr.hasNext()){
-//            Cell c =cellItr.next();
-//            if(c.getCellType() ==HSSFCell.CELL_TYPE_BLANK){
-//                num++;
-//            }
-//        }
-//        return num;
-//    }
-    /*
-    导出题目到根目录下的testsystem文件夹下
-     */
 }

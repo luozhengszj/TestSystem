@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -72,10 +73,14 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        int type = -2;
+
         Library library = librarylist.get(position);
         String sql1 = "select * from question where test_id=?";
-        String sql2 = "select * from question where test_id=? and wrong_flag > 0";
+        String sql2 = "select * from question where test_id=? and wrong_flag = 1";
         SelectQuestionDB selectquestiondb = new SelectQuestionDB(this);
+
         ArrayList<Question> questionlist1 = selectquestiondb.selectAllQuestion(sql1, valueOf(library.getId()));
         ArrayList<Question> questionlist2 = selectquestiondb.selectAllQuestion(sql2, valueOf(library.getId()));
         final ArrayList<Question> finalQuestionlist1 = questionlist1;
@@ -89,7 +94,8 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist1);
                         bundle.putString("libraryname",libraryname);
-                        bundle.putInt("test_id",0);
+                        Log.d("lz",""+finalQuestionlist1.size());
+                        bundle.putInt("test_id",-1);
                         bundle.putBoolean("flag",true);
                         it.putExtras(bundle);
                         ShowTestsActivity.this.startActivity(it);
@@ -102,6 +108,7 @@ public class ShowTestsActivity extends TitleActivity implements AdapterView.OnIt
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("questionlist", finalQuestionlist2);
                         bundle.putString("libraryname",libraryname);
+                        Log.d("lz",""+finalQuestionlist2.size());
                         bundle.putInt("test_id",-1);
                         bundle.putBoolean("flag",true);
                         it.putExtras(bundle);

@@ -73,8 +73,8 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
     public void showADialog() {
         new AlertDialog.Builder(SearchActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"                        错      题", "                        收      藏",
-                                "                        全      部"},
+                .setItems(new String[]{"错题", "收藏",
+                                "全部"},
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +52,8 @@ public class MakeTestModeActivity extends TitleActivity {
     private int sflag = 0;
     private int mflag = 0;
     private int jflag = 0;
+    private int pathflag = 0;
+    private Library library;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,7 @@ public class MakeTestModeActivity extends TitleActivity {
             metsinglesorce.setFocusable(true);
             metsinglenum.setFocusableInTouchMode(true);
             metsinglesorce.setFocusableInTouchMode(true);
+            pathflag = pathflag+1;
         }
         if (!"".equals(multiplefilepath)) {
             mflag = 1;
@@ -147,6 +151,7 @@ public class MakeTestModeActivity extends TitleActivity {
             metmultiplesorce.setFocusable(true);
             metmultiplenum.setFocusableInTouchMode(true);
             metmultiplesorce.setFocusableInTouchMode(true);
+            pathflag = pathflag+2;
         }
         if (!"".equals(judgefilepath)) {
             jflag = 1;
@@ -161,16 +166,55 @@ public class MakeTestModeActivity extends TitleActivity {
             metjudgesorce.setFocusable(true);
             metjudgenum.setFocusableInTouchMode(true);
             metjudgesorce.setFocusableInTouchMode(true);
+            pathflag = pathflag+4;
         }
     }
 
     public boolean makeTestLimit() {
         boolean limitflag = true;
-        LibraryAndTestDB library = new LibraryAndTestDB(this);
-        boolean namelimit = library.libraryNameLimit(metlibraryname.getText().toString());
+
+        library = new Library();
+        library.setLibrary_name(metlibraryname.getText().toString());
+        library.setSingle_num("" + metsinglenum.getText().toString());
+        library.setSingle_score("" + metsinglesorce.getText().toString());
+        library.setMultiple_num("" + metmultiplenum.getText().toString());
+        library.setMultiple_score("" + metmultiplesorce.getText().toString());
+        library.setJudge_num("" + metjudgenum.getText().toString());
+        library.setJudge_score("" + metjudgesorce.getText().toString());
+
+        LibraryAndTestDB libraryAndTestDB = new LibraryAndTestDB(this);
+        boolean namelimit = libraryAndTestDB.libraryNameLimit(metlibraryname.getText().toString());
         if (namelimit == false) {
             Toast.makeText(this, "题库名重复，请重新输入！", Toast.LENGTH_SHORT).show();
             limitflag = false;
+        }
+        Log.d("lzz",library.toString()+"-----"+singlefilepath);
+        if(!singlefilepath.equals("")){
+            if(library.getSingle_num().equals("") || library.getSingle_score().equals("")) {
+                Toast.makeText(this, "单选题信息请输入完整", Toast.LENGTH_SHORT).show();
+                limitflag = false;
+                return limitflag;
+            }else{
+                limitflag = true;
+            }
+        }
+        if(!multiplefilepath.equals("")){
+            if(library.getMultiple_num().equals("") || library.getMultiple_score().equals("")) {
+                Toast.makeText(this, "多选题信息请输入完整", Toast.LENGTH_SHORT).show();
+                limitflag = false;
+                return limitflag;
+            }else{
+                limitflag = true;
+            }
+        }
+        if(!judgefilepath.equals("")){
+            if(library.getJudge_num().equals("") || library.getMultiple_score().equals("")) {
+                Toast.makeText(this, "题信息请输入完整", Toast.LENGTH_SHORT).show();
+                limitflag = false;
+                return limitflag;
+            }else{
+                limitflag = true;
+            }
         }
         return limitflag;
     }
@@ -236,12 +280,11 @@ public class MakeTestModeActivity extends TitleActivity {
     }
 
     private class MyTask extends AsyncTask<String, Integer, String> {
-        Library library;
         CustomDialog customDialog;
 
         @Override
         protected void onPreExecute() {
-            library = new Library();
+
             library.setLibrary_name(metlibraryname.getText().toString());
             library.setSingle_num("" + metsinglenum.getText().toString());
             library.setSingle_score("" + metsinglesorce.getText().toString());

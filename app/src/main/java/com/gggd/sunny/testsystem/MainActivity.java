@@ -1,13 +1,14 @@
 package com.gggd.sunny.testsystem;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.gggd.sunny.testsystem.dao.LibraryAndTestDB;
 import com.gggd.sunny.testsystem.dao.SelectQuestionDB;
 import com.gggd.sunny.testsystem.dao.WrongAndCollectDB;
 import com.gggd.sunny.testsystem.tools.FileCreate;
+import com.gggd.sunny.testsystem.tools.QRcodeDialog;
 import com.gggd.sunny.testsystem.view.SearchActivity;
 import com.gggd.sunny.testsystem.view.ShowTestsActivity;
 import com.gggd.sunny.testsystem.view.SwitchLibraryActivity;
@@ -52,12 +54,6 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
 
     private String libraryname;
     private LibraryAndTestDB libraryAndTestDB;
-
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -331,8 +327,8 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     public void outquestion() {
         new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"                        全      部", "                        收      藏",
-                                "                        错      题"},
+                .setItems(new String[]{"全部", "收藏",
+                                "错题"},
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,
@@ -378,7 +374,7 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             Toast.makeText(MainActivity.this, "导出了" + daochunum + "条数据", Toast.LENGTH_SHORT).show();
             new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                     .setIcon(android.R.drawable.divider_horizontal_bright)
-                    .setItems(new String[]{"   保存在SD>TestSystem>."}, null).show();
+                    .setItems(new String[]{"保存在SD>TestSystem>."}, null).show();
         }
     }
 
@@ -386,22 +382,24 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     public void anboutOus() {
         new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"                        使用说明",
+                .setItems(new String[]{"使用说明",
                                 "1.导入文件仅接受.xls",
                                 "2.格式:题目、选项(最多六个)、答案",
                                 "3.选项无须AB，答案直接AB选项",
                                 "4.excel第一行即为导入第一道题",
                                 "5.导出文件于SD卡/TestSystem/",
-                                "                            end"},
+                                "二维码    --end"},
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (which == 3) {
-                                    Intent intent = new Intent();
-                                    intent.setAction("android.intent.action.VIEW");
-                                    Uri content_url = Uri.parse("https://github.com/luozhengszj/TestSystem");
-                                    intent.setData(content_url);
-                                    startActivity(intent);
+                                if (which == 6 ){
+                                    Resources res=getResources();
+                                    Bitmap bmp= BitmapFactory.decodeResource(res, R.drawable.hechengqr);// 这里是获取图片Bitmap，也可以传入其他参数到Dialog中
+                                    QRcodeDialog.Builder dialogBuild = new QRcodeDialog.Builder(MainActivity.this);
+                                    dialogBuild.setImage(bmp);
+                                    QRcodeDialog dialog1 = dialogBuild.create();
+                                    dialog1.setCanceledOnTouchOutside(true);// 点击外部区域关闭
+                                    dialog1.show();
                                 }
                             }
                         }).show();
@@ -411,30 +409,39 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
         String[] ss;
         if(libraryname.equals("欢迎使用") ){
             ss = new String[]{
-                    "       GitHub name,luozhengszj.",
-                    "                                           by sunny"};
+                    "GitHub name,luozhengszj.",
+                    "by sunny"};
         }else{
             libraryAndTestDB = new LibraryAndTestDB(this);
             ss = libraryAndTestDB.getLibraryInfo(libraryname);
             if(ss == null){
                 ss = new String[]{
-                        "       GitHub name,luozhengszj.",
-                        "                                           by sunny"};
+                        "GitHub name,luozhengszj.",
+                        "by sunny"};
             }
         }
         new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
                 .setItems(ss,null).show();
     }
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE" };
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
+
+    public static void verifyStoragePermissions(Activity activity) {
+
+        try {
+            //检测是否有写的权限
+            int permission = ActivityCompat.checkSelfPermission(activity,
+                    "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，会弹出对话框
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

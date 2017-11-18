@@ -7,6 +7,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
+import static com.gggd.sunny.testsystem.R.id.button_forward;
 import static com.gggd.sunny.testsystem.R.id.tvsinglefilepath;
 
 
@@ -40,6 +43,23 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
     private String pathtype;
     private String filetype;
     private File file;
+    private String rootpath;
+    private String systemtype;
+    private boolean typeflag;
+    private String[] ss;
+
+    public static String getProperty(String key, String defaultValue) {
+        String value = defaultValue;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class, String.class);
+            value = (String) (get.invoke(c, key, "unknown"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return value;
+        }
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -48,12 +68,19 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
         setTitle("导入题库");
         showForwardView(true);
         mbuttonbackward = (Button) findViewById(R.id.button_backward);
-        mbuttonforward = (Button) findViewById(R.id.button_forward);
+        mbuttonforward = (Button) findViewById(button_forward);
         mtvinputfile = (TextView) findViewById(R.id.tvinputfile);
         mbuttonforward.setText("切换");
+        SharedPreferences sharedPreferences = getSharedPreferences("librarydata",
+                Activity.MODE_PRIVATE);
+        systemtype = sharedPreferences.getString("systemtype", getProperty("ro.build.version.emui", ""));
+        rootpath = "/storage/emulated/0";
+        pathtype = sharedPreferences.getString("pathtype", rootpath +
+                "/tencent/MicroMsg/Download/");
+        filetype = sharedPreferences.getString("filetype", "application/vnd.ms-excel");
+        ss = new String[3];
+
         mbuttonforward.setOnClickListener(this);
-        pathtype = "/sdcard/tencent/MicroMsg/Download/";
-        filetype = "application/vnd.ms-excel";
 
         mbtnselectok = (Button) findViewById(R.id.btnselectok);
         mbtnselectreset = (Button) findViewById(R.id.btnselectreset);
@@ -70,17 +97,33 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        file = new File(pathtype);
-        if (null == file || !file.exists()) {
-            Toast.makeText(this, "不存在该目录", Toast.LENGTH_SHORT).show();
-            return;
+        Intent intent;
+        if ("Em".equals(systemtype.substring(0, 2))) {
+            typeflag = false;
+            ss[0] = "您的系统暂不支持跳转";
+            ss[1] = "微信下载文件在/tencent/MicroMsg/Download/下";
+            ss[2] = "QQ下载文件在/tencent/QQfile_recv/下";
+            mbuttonforward.setText("说明");
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("text/*,excel/*");//无类型限制
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        } else {
+            typeflag = true;
+            ss[0] = "微信文件夹";
+            ss[1] = "QQ文件夹";
+            ss[2] = "根目录";
+            mbuttonforward.setVisibility(View.VISIBLE);
+            file = new File(pathtype);
+            if (file == null || !file.exists()) {
+                file = new File(rootpath);
+                pathtype = rootpath;
+                filetype = "file/*";
+            }
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setDataAndType(Uri.fromFile(file), filetype);
         }
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//      intent.addCategory(Intent.CATEGORY_DEFAULT);
-//      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//      intent.setDataAndType(Uri.fromFile(file), "file/*");
-        intent.setDataAndType(Uri.fromFile(file), filetype);
+
         switch (v.getId()) {
             case R.id.tvsinglefilepath:
                 flag = 1;
@@ -104,13 +147,20 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
                         == "" && mtvsinglefilepath.getText() == "")
                     Toast.makeText(this, "必须有一种题型！", Toast.LENGTH_SHORT).show();
                 else {
+                    SharedPreferences mySharedPreferences = InputLibraryActivity.this.getSharedPreferences("librarydata",
+                            Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mySharedPreferences.edit();
+                    editor.putString("filetype", rootpath + "/tencent/MicroMsg/Download/");
+                    editor.putString("pathtype", "file/*");
+                    //提交当前数据
+                    editor.commit();
                     setMbtnselect(v);
                 }
                 break;
             case R.id.button_backward:
                 super.onClick(v);
                 break;
-            case R.id.button_forward:
+            case button_forward:
                 qiehuanpath();
                 break;
         }
@@ -182,7 +232,6 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
 
     /**
      * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
@@ -300,31 +349,47 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
     }
 
     public void qiehuanpath() {
+        SharedPreferences mySharedPreferences = InputLibraryActivity.this.getSharedPreferences("librarydata",
+                Activity.MODE_PRIVATE);
+        //实例化SharedPreferences.Editor对象（第二步）
+        SharedPreferences.Editor editor;
         new AlertDialog.Builder(InputLibraryActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"                        微      信",
-                                "                        企      鹅"},
+                .setItems(ss,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 switch (which) {
                                     case 0:
-                                        pathtype = "/sdcard/tencent/MicroMsg/Download/";;
-                                        mtvinputfile.setText("微信文件夹");
+                                        if (typeflag) {
+                                            pathtype = rootpath + "/tencent/MicroMsg/Download/";
+                                            filetype = "application/vnd.ms-excel";
+                                            mtvinputfile.setText("微信文件夹");
+                                        }
                                         break;
                                     case 1:
-                                        filetype = "application/vnd.ms-excel";
-                                        mtvinputfile.setText("企鹅文件夹");
+                                        if (typeflag) {
+                                            pathtype = rootpath + "/tencent/QQfile_recv/";
+                                            filetype = "application/vnd.ms-excel";
+                                            mtvinputfile.setText("QQ文件夹");
+                                        }
                                         break;
-//                                    case 2:
-//                                        pathtype = "/sdcard/comtop.im/";
-//                                        filetype = "excel/*";
-//                                        mtvinputfile.setText("企信文件夹");
+                                    case 2:
+                                        if (typeflag) {
+                                            pathtype = rootpath;
+                                            filetype = "file/*";
+                                            mtvinputfile.setText("根目录");
 //                                        Toast.makeText(InputLibraryActivity.this, "请到comtop.im/../userdatas/FileRecv/下", Toast.LENGTH_SHORT).show();
-//                                        break;
+                                        }
+                                        break;
                                 }
                             }
                         }).show();
+        editor = mySharedPreferences.edit();
+        editor.putString("filetype", filetype);
+        editor.putString("pathtype", pathtype);
+        //提交当前数据
+        editor.commit();
     }
 }
