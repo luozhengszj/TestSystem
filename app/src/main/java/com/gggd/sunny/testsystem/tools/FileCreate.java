@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class FileCreate {
     private final static String fileroot="/sdcard/TestSystem/";
     //创建文件
-    public int createFile(ArrayList<Question> list,String libraryname) {
+    public int createExcel(ArrayList<Question> list,String libraryname) {
         //写出的个数
         int num = 0;
         // 声明一个工作薄
@@ -63,6 +64,41 @@ public class FileCreate {
             makeRootDirectory(fileroot,fileroot+libraryname+".xls");
             FileOutputStream out = new FileOutputStream(fileroot+libraryname+".xls");
             wb.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return num;
+    }
+    public int createTXT(ArrayList<Question> list,String libraryname) {
+        int num = 0;
+        try {
+            makeRootDirectory(fileroot,fileroot+libraryname+".txt");
+            FileWriter out = new FileWriter(fileroot+libraryname+".txt",true);
+            for(Question q:list){
+                num++;
+                if(q.getType().equals("3")) {
+                    String str = num + "." + q.getTopic() + "\n" + "正确答案：" + q.getOption_t()+"\n";
+                    out.write(str);
+                    out.flush();
+                }else{
+                    String str = num + "." + q.getTopic() + "\nA." + q.getOption_a() + "\nB." + q.getOption_b() + "\n";
+                    if (q.getOption_c() != null && !q.getOption_c().equals("")) {
+                        str = str + "C." +  q.getOption_c() + "\n";
+                    } else if (q.getOption_d() != null && !q.getOption_d().equals("")) {
+                        str = str + "D." +  q.getOption_d() + "\n";
+                    } else if (q.getOption_e() != null && !q.getOption_e().equals("")) {
+                        str = str + "E." +  q.getOption_e() + "\n";
+                    } else if (q.getOption_f() != null && !q.getOption_f().equals("")) {
+                        str = str + "F." +  q.getOption_f() + "\n";
+                    }
+                    str = str + "正确答案：" + q.getOption_t()+"\n";
+                    out.write(str);
+                    out.flush();
+                }
+            }
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

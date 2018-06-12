@@ -150,16 +150,17 @@ public class SearchActivity extends TitleActivity implements AdapterView.OnItemC
             startActivity(intent11);
         } else {
             String sql;
-            WrongAndCollectDB wrongAndCollectDB;
+            WrongAndCollectDB wrongAndCollectDB = new WrongAndCollectDB(this);
             if (type == 1) {
                 sql = "select * from question where library_num=? and id in(select question_id from collect_wrong where wrong_flag=1)";
+                list = wrongAndCollectDB.getWrongandCollectNum(sql, librarynum);
             } else if (type == 2) {
                 sql = "select * from question where library_num=? and id in(select question_id from collect_wrong where collect_flag=1)";
-            } else {
+                list = wrongAndCollectDB.getWrongandCollectNum(sql, librarynum);
+            } else if (type == 3) {
                 sql = "select * from question where library_num=?";
+                list = wrongAndCollectDB.getWrongandCollectNum(sql, librarynum);
             }
-            wrongAndCollectDB = new WrongAndCollectDB(this);
-            list = wrongAndCollectDB.getWrongandCollectNum(sql, librarynum);
         }
     }
     //监听返回键

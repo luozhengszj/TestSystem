@@ -3,7 +3,6 @@ package com.gggd.sunny.testsystem.tools;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by Sunny on 2017/10/11.
@@ -47,14 +46,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public DBOpenHelper(Context context) {
         super(context, CREATE_LIBRARY_NAME, null, VSERSION);
-        Log.d("lz  db","onCreate OK!");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_LIBRARY_TABLE);
         db.execSQL(CREATE_QUESTION_TABLE);
-        Log.d("lz  db","onCreateDB OK!");
         db.execSQL(CREATE_COLLECTION_TABLE);
     }
 

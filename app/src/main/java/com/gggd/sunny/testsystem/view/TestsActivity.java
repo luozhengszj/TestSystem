@@ -286,30 +286,51 @@ public class TestsActivity extends TitleActivity implements RadioGroup.OnChecked
             mcbquestionmultiple4.setText(question.getOption_d());
             mcbquestionmultiple5.setText(question.getOption_e());
             mcbquestionmultiple6.setText(question.getOption_f());
-            Log.d("lzz","1,"+question.getOption_e().length()+question.getOption_f());
-            if(question.getOption_e().length() == 0){
+            if(question.getOption_d().length() == 0){
+                mcbquestionmultiple4.setVisibility(View.GONE);
                 mcbquestionmultiple5.setVisibility(View.GONE);
-                if(question.getOption_f().length() == 0){
+                mcbquestionmultiple6.setVisibility(View.GONE);
+                if(question.getOption_e().length() == 0){
+                    mcbquestionmultiple5.setVisibility(View.GONE);
                     mcbquestionmultiple6.setVisibility(View.GONE);
+                    if(question.getOption_f().length() == 0){
+                        mcbquestionmultiple6.setVisibility(View.GONE);
+                    }else{
+                        mcbquestionmultiple6.setVisibility(View.VISIBLE);
+                    }
                 }else{
-                    mcbquestionmultiple6.setVisibility(View.VISIBLE);
+                    mcbquestionmultiple5.setVisibility(View.VISIBLE);
+                    if(question.getOption_f().length() == 0){
+                        mcbquestionmultiple6.setVisibility(View.GONE);
+                    }else{
+                        mcbquestionmultiple6.setVisibility(View.VISIBLE);
+                    }
                 }
             }else{
-                mcbquestionmultiple5.setVisibility(View.VISIBLE);
+                mcbquestionmultiple4.setVisibility(View.VISIBLE);
+                if(question.getOption_e().length() == 0){
+                    mcbquestionmultiple5.setVisibility(View.GONE);
+                    mcbquestionmultiple6.setVisibility(View.GONE);
+                    if(question.getOption_f().length() == 0){
+                        mcbquestionmultiple6.setVisibility(View.GONE);
+                    }else{
+                        mcbquestionmultiple6.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    mcbquestionmultiple5.setVisibility(View.VISIBLE);
+                    if(question.getOption_f().length() == 0){
+                        mcbquestionmultiple6.setVisibility(View.GONE);
+                    }else{
+                        mcbquestionmultiple6.setVisibility(View.VISIBLE);
+                    }
+                }
             }
-            int checkBoxListsize = checkBoxList.size();
             if (!selectTypeShowanswer.equals(" ")) {
                 String[] sss = selectTypeShowanswer.split("");
                 for (int i = 1; i < sss.length; i++) {
                     checkBoxList.get((sss[i].charAt(0) - 65)).setChecked(true);
                 }
             }
-//            for (int i = checkBoxListsize - 1; i < 6; i++) {
-//                checkBoxList.get(i).setVisibility(View.GONE);
-//            }
-//            for (int i = 0; i < checkBoxListsize; i++) {
-//                checkBoxList.get(i).setVisibility(View.VISIBLE);
-//            }
         }
     }
 

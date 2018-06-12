@@ -40,6 +40,8 @@ public class LibraryAndTestDB {
         cursor = db.rawQuery(mintestid, new String[]{minnum+""});
         cursor.moveToFirst();
         minid = cursor.getInt(cursor.getColumnIndex("min(id)"))-1;
+        if(cursor != null)
+            cursor.close();
         return minnum + " " + minid;
     }
     //查看题库名是否重复
@@ -50,6 +52,8 @@ public class LibraryAndTestDB {
         if (cursor.getCount() == 0) {
             flag = true;
         }
+        if(cursor != null)
+            cursor.close();
         return flag;
     }
     //开始考试，查询出一条未进行开始的记录
@@ -70,6 +74,8 @@ public class LibraryAndTestDB {
             Library library = new Library(id,name,num,flag,single_num,multiple_num,judge_num,time);
             list.add(library);
         }
+        if(cursor != null)
+            cursor.close();
         return list;
     }
 
@@ -87,6 +93,8 @@ public class LibraryAndTestDB {
             library.setTime(time);
             list.add(library);
         }
+        if(cursor != null)
+            cursor.close();
         return list;
     }
     //切换试卷
@@ -100,6 +108,8 @@ public class LibraryAndTestDB {
             library.setLibrary_name(name);
             list.add(library);
         }
+        if(cursor != null)
+            cursor.close();
         return list;
     }
     //获取每个librarname的信息
@@ -107,7 +117,7 @@ public class LibraryAndTestDB {
         ArrayList<Library> list = new ArrayList<>();
         String sql0 = "select count(*) from library where name=? and flag=0";
         String sql1 = "select count(*) from library where name=? and flag=1";
-        Cursor cursor;
+        Cursor cursor = null;
         for(int i =  0;i<namelist.size();i++) {
             cursor = db.rawQuery(sql0, new String[]{namelist.get(i).getLibrary_name()});
             cursor.moveToFirst();
@@ -119,6 +129,8 @@ public class LibraryAndTestDB {
             namelist.get(i).setTime(flag1);
             list.add(namelist.get(i));
         }
+        if(cursor!= null)
+            cursor.close();
         return list;
     }
     public String existLibrary(String libraryname){
@@ -126,6 +138,8 @@ public class LibraryAndTestDB {
         Cursor cursor = db.rawQuery(sql, new String[]{libraryname});
         cursor.moveToFirst();
         String flag1 = cursor.getString(cursor.getColumnIndex("count(*)"));
+        if(cursor != null)
+            cursor.close();
         return flag1;
     }
     //删除题库
@@ -139,6 +153,8 @@ public class LibraryAndTestDB {
             cursor.moveToFirst();
             flag1 = cursor.getInt(cursor.getColumnIndex("num"));
         }
+        if(cursor != null)
+            cursor.close();
         return flag1;
     }
     public String deleteLibrary2(int num){
@@ -156,6 +172,8 @@ public class LibraryAndTestDB {
             cursor.moveToFirst();
             flag1 = cursor.getString(cursor.getColumnIndex("name"));
         }
+        if(cursor != null)
+            cursor.close();
         return flag1;
     }
     public String getPercent(String libraryname){
@@ -173,6 +191,8 @@ public class LibraryAndTestDB {
                 tmp = tmp1+"/"+tmp;
             }
         }
+        if(cursor != null)
+            cursor.close();
         return tmp;
     }
     public String[] getLibraryInfo(String libraryname){
@@ -216,6 +236,8 @@ public class LibraryAndTestDB {
             cursor = db.rawQuery(sqlwrongcount, new String[]{librarynum+""});
             cursor.moveToFirst();
             wrongcount = cursor.getInt(cursor.getColumnIndex("count(*)"));
+            if(cursor != null)
+                cursor.close();
             return new String[]{"      单选题数目："+singlecount,"      多选题数目："+multiplecount,"      判断题数目："+judgecount,
                     "      已收藏："+collectcount,"      目前错题："+wrongcount,};
         }

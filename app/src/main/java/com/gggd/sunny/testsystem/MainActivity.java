@@ -327,8 +327,9 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
     public void outquestion() {
         new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                 .setIcon(android.R.drawable.divider_horizontal_bright)
-                .setItems(new String[]{"全部", "收藏",
-                                "错题"},
+                .setItems(new String[]{ "收藏(.txt)",
+                                "错题(.txt)","  ","收藏(.xls)",
+                                "错题(.xls)"},
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,
@@ -340,8 +341,10 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                                     case 1:
                                         outQuestion(1);
                                         break;
-                                    case 2:
-                                        outQuestion(2);
+                                    case 3:
+                                        outQuestion(3);
+                                    case 4:
+                                        outQuestion(4);
                                         break;
                                 }
                             }
@@ -356,21 +359,30 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
             int tmpnum = selectdb.getLibrarynum(libraryname);
             String sql;
             ArrayList<Question> qlist = new ArrayList<>();
-            if (type == 0) {
-                sql = "select topic,option_a,option_b,option_c,option_d,option_e,option_f,option_t from question where library_num=" + tmpnum + " group by(question_id)";
-                qlist = selectdb.getQuestion(sql);
-            } else if (type == 1) {
-                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where collect_flag='1')";
-                qlist = selectdb.getQuestion(sql);
-            } else {
-                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where wrong_flag='0')";
-                qlist = selectdb.getQuestion(sql);
-            }
             Date curDate = new Date(System.currentTimeMillis());//获取当前时间
             SimpleDateFormat sDateFormat = new SimpleDateFormat("MM-dd hh-mm");
             String date = sDateFormat.format(curDate);
             FileCreate f = new FileCreate();
-            int daochunum = f.createFile(qlist, libraryname + " " + date);
+            int daochunum = 0;
+            if (type == 0) {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where collect_flag='1')";
+                qlist = selectdb.getQuestion(sql);
+                daochunum = f.createTXT(qlist, libraryname + " " + date);
+            } else if(type == 1) {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where wrong_flag='1')";
+                qlist = selectdb.getQuestion(sql);
+                daochunum = f.createTXT(qlist, libraryname + " " + date);
+            }else if(type == 3) {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where collect_flag='1')";
+                qlist = selectdb.getQuestion(sql);
+                daochunum = f.createExcel(qlist, libraryname + " " + date);
+            } else {
+                sql = "select * from question where library_num=" + tmpnum + " and id in(select question_id from collect_wrong where wrong_flag='1')";
+                qlist = selectdb.getQuestion(sql);
+                daochunum = f.createExcel(qlist, libraryname + " " + date);
+            }
+
+
             Toast.makeText(MainActivity.this, "导出了" + daochunum + "条数据", Toast.LENGTH_SHORT).show();
             new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_LIGHT)
                     .setIcon(android.R.drawable.divider_horizontal_bright)
@@ -384,11 +396,11 @@ public class MainActivity extends TitleActivity implements View.OnClickListener 
                 .setIcon(android.R.drawable.divider_horizontal_bright)
                 .setItems(new String[]{"使用说明",
                                 "1.导入文件仅接受.xls",
-                                "2.格式:题目、选项(最多六个)、答案",
-                                "3.选项无须AB，答案直接AB选项",
-                                "4.excel第一行即为导入第一道题",
-                                "5.导出文件于SD卡/TestSystem/",
-                                "二维码    --end"},
+                                "2.格式:题目、选项(最多六个)、答案;excel第一行即为导入第一道题;格式:题目、A、B、C、D、E、F、正确答案各一列",
+                                "3.正确答案格式：A（单选）、AB（多选）、对或错（判断）",
+                                "4.excel第一行即为导入第一道题，导出文件于SD卡/TestSystem/",
+                                "5.GitHub name,luozhengszj.",
+                                "二维码 （失效）   --end"},
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

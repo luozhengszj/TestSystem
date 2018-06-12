@@ -25,11 +25,11 @@ public class WrongAndCollectDB {
 
     //更新错题的标志
     public void updateWrongQuestion(ArrayList<Question> list, Library library) {
-        String sql = "update question set answer=?, wrong_flag=?,wrong_flag=? where id=?";
+        String sql = "update question set answer=?, wrong_flag=? where id=?";
         String sql_wrong_collect = "update collect_wrong set wrong_flag=?,collect_flag=? where question_id=(" +
                 "select question_id from question where id=?)";
         for (Question q : list) {
-            db.execSQL(sql, new Object[]{q.getAnswer(), q.getCollect_flag(), q.getWrong_flag(), q.getId()});
+            db.execSQL(sql, new Object[]{q.getAnswer(),  q.getWrong_flag(), q.getId()});
             db.execSQL(sql_wrong_collect, new Object[]{q.getWrong_flag(), q.getCollect_flag(), q.getId()});
         }
         if (library.getId() != 0) {
@@ -54,42 +54,12 @@ public class WrongAndCollectDB {
             db.execSQL(sql, new Object[]{q.getCollect_flag(), q.getId()});
         }
     }
-
-    //我的收藏和我的错题
-    public ArrayList<Question> getWrongandCollect(String sql,int library_num){
-        ArrayList<Question> list = new ArrayList();
-        Cursor cursor = db.rawQuery(sql,new String[]{library_num+""});
-        while (cursor.moveToNext()){
-            int id = cursor.getInt(cursor.getColumnIndex("id"));
-            String type = cursor.getString(cursor.getColumnIndex("type"));
-            String topic = cursor.getString(cursor.getColumnIndex("topic"));
-            String option_a = cursor.getString(cursor.getColumnIndex("option_a"));
-            String option_b = cursor.getString(cursor.getColumnIndex("option_b"));
-            String option_c = cursor.getString(cursor.getColumnIndex("option_c"));
-            String option_d = cursor.getString(cursor.getColumnIndex("option_d"));
-            String option_e = cursor.getString(cursor.getColumnIndex("option_e"));
-            String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
-            String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
-            String wrong_flag = cursor.getString(cursor.getColumnIndex("wrong_flag"));
-            String option_answer = "";
-            int score = cursor.getInt(cursor.getColumnIndex("score"));
-            Question question = new Question(id, type, topic, option_a, option_b, option_c, option_d, option_e, option_f,
-                    option_t, option_answer, score, wrong_flag);
-            String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
-            String collectsql = "select collect_flag from collect_wrong where question_id=?";
-            Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
-            cursor1.moveToFirst();
-            String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
-            question.setCollect_flag(collect_flag);
-            list.add(question);
-        }
-        return list;
-    }
     //我的收藏和我的错题(score记录选项个数)
     public ArrayList<Question> getWrongandCollectNum(String sql,int library_num){
         ArrayList<Question> list = new ArrayList();
         Cursor cursor = db.rawQuery(sql,new String[]{library_num+""});
         int optionnum = 0;
+        Cursor cursor1 = null;
         while (cursor.moveToNext()){
             int id = cursor.getInt(cursor.getColumnIndex("id"));
             String type = cursor.getString(cursor.getColumnIndex("type"));
@@ -119,12 +89,18 @@ public class WrongAndCollectDB {
                     option_t, option_answer, optionnum, wrong_flag);
             String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
             String collectsql = "select collect_flag from collect_wrong where question_id=?";
-            Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
-            cursor1.moveToFirst();
-            String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
-            question.setCollect_flag(collect_flag);
-            list.add(question);
+            cursor1 = db.rawQuery(collectsql, new String[]{question_id});
+            if(cursor1!= null && cursor1.getCount() != 0) {
+                cursor1.moveToFirst();
+                String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
+                question.setCollect_flag(collect_flag);
+                list.add(question);
+            }
         }
+        if(cursor1!= null )
+            cursor1.close();
+        if(cursor!= null )
+            cursor.close();
         return list;
     }
 
@@ -139,6 +115,8 @@ public class WrongAndCollectDB {
         }else{
             num = cursor1.getInt(cursor1.getColumnIndex("num"));
         }
+        if(cursor1!= null )
+            cursor1.close();
         return num;
     }
 }

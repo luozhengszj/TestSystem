@@ -1,6 +1,7 @@
 package com.gggd.sunny.testsystem;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -70,10 +71,17 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
         mbuttonbackward = (Button) findViewById(R.id.button_backward);
         mbuttonforward = (Button) findViewById(button_forward);
         mtvinputfile = (TextView) findViewById(R.id.tvinputfile);
+        mtvinputfile.setText("请手动选择文件");
         mbuttonforward.setText("切换");
         SharedPreferences sharedPreferences = getSharedPreferences("librarydata",
                 Activity.MODE_PRIVATE);
         systemtype = sharedPreferences.getString("systemtype", getProperty("ro.build.version.emui", ""));
+
+        if ("Em".equals(systemtype.substring(0, 2))) {
+            typeflag = false;
+        } else {
+            typeflag = true;
+        }
         rootpath = "/storage/emulated/0";
         pathtype = sharedPreferences.getString("pathtype", rootpath +
                 "/tencent/MicroMsg/Download/");
@@ -98,8 +106,7 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         Intent intent;
-        if ("Em".equals(systemtype.substring(0, 2))) {
-            typeflag = false;
+        if (!typeflag) {
             ss[0] = "您的系统暂不支持跳转";
             ss[1] = "微信下载文件在/tencent/MicroMsg/Download/下";
             ss[2] = "QQ下载文件在/tencent/QQfile_recv/下";
@@ -107,8 +114,7 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
             intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("text/*,excel/*");//无类型限制
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-        } else {
-            typeflag = true;
+        } else{
             ss[0] = "微信文件夹";
             ss[1] = "QQ文件夹";
             ss[2] = "根目录";
@@ -123,7 +129,6 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setDataAndType(Uri.fromFile(file), filetype);
         }
-
         switch (v.getId()) {
             case R.id.tvsinglefilepath:
                 flag = 1;
@@ -348,6 +353,7 @@ public class InputLibraryActivity extends TitleActivity implements View.OnClickL
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void qiehuanpath() {
         SharedPreferences mySharedPreferences = InputLibraryActivity.this.getSharedPreferences("librarydata",
                 Activity.MODE_PRIVATE);

@@ -27,6 +27,7 @@ public class SelectQuestionDB {
     public ArrayList<Question> selectAllQuestion(String sql, String test_id) {
         ArrayList<Question> list = new ArrayList<>();
         Cursor cursor = db.rawQuery(sql, new String[]{test_id});
+        Cursor cursor1 = null;
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("id"));
             String type = cursor.getString(cursor.getColumnIndex("type"));
@@ -48,12 +49,16 @@ public class SelectQuestionDB {
             //查看是否已经收藏
             String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
             String collectsql = "select collect_flag from collect_wrong where question_id=?";
-            Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
+            cursor1 = db.rawQuery(collectsql, new String[]{question_id});
             cursor1.moveToFirst();
             String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
             question.setCollect_flag(collect_flag);
             list.add(question);
         }
+        if(cursor1 != null)
+            cursor1.close();
+        if(cursor != null)
+            cursor.close();
         return list;
     }
 
@@ -71,6 +76,8 @@ public class SelectQuestionDB {
         cursor.moveToFirst();
         int judge_num = cursor.getInt(cursor.getColumnIndex("judge_num"));
         ArrayList<Question> list = new ArrayList<>();
+        Cursor cursor1 = null;
+        System.out.print(single_num);
         if(single_num>0) {
             String sql = "select * from question where id in (" +
                     "select question_id from collect_wrong where wrong_flag='1' and type='1' limit "+single_num+")";
@@ -94,7 +101,7 @@ public class SelectQuestionDB {
                 //查看是否已经收藏
                 String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
                 String collectsql = "select collect_flag from collect_wrong where question_id=?";
-                Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
+                cursor1 = db.rawQuery(collectsql, new String[]{question_id});
                 cursor1.moveToFirst();
                 String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
                 question.setCollect_flag(collect_flag);
@@ -124,7 +131,7 @@ public class SelectQuestionDB {
                 //查看是否已经收藏
                 String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
                 String collectsql = "select collect_flag from collect_wrong where question_id=?";
-                Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
+                cursor1 = db.rawQuery(collectsql, new String[]{question_id});
                 cursor1.moveToFirst();
                 String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
                 question.setCollect_flag(collect_flag);
@@ -154,13 +161,17 @@ public class SelectQuestionDB {
                 //查看是否已经收藏
                 String question_id = cursor.getString(cursor.getColumnIndex("question_id"));
                 String collectsql = "select collect_flag from collect_wrong where question_id=?";
-                Cursor cursor1 = db.rawQuery(collectsql, new String[]{question_id});
+                cursor1 = db.rawQuery(collectsql, new String[]{question_id});
                 cursor1.moveToFirst();
                 String collect_flag = cursor1.getString(cursor1.getColumnIndex("collect_flag"));
                 question.setCollect_flag(collect_flag);
                 list.add(question);
             }
         }
+        if(cursor1 != null)
+            cursor1.close();
+        if(cursor != null)
+            cursor.close();
         return list;
     }
     //导出题目
@@ -176,9 +187,13 @@ public class SelectQuestionDB {
             String option_e = cursor.getString(cursor.getColumnIndex("option_e"));
             String option_f = cursor.getString(cursor.getColumnIndex("option_f"));
             String option_t = cursor.getString(cursor.getColumnIndex("option_t"));
+            String type = cursor.getString(cursor.getColumnIndex("type"));
             Question question = new Question(topic,option_a,option_b,option_c,option_d,option_e,option_f,option_t);
+            question.setType(type);
             list.add(question);
         }
+        if(cursor != null)
+            cursor.close();
         return list;
     }
     //导出题库
@@ -192,6 +207,8 @@ public class SelectQuestionDB {
             cursor.moveToFirst();
             flag1 = cursor.getInt(cursor.getColumnIndex("num"));
         }
+        if(cursor != null)
+            cursor.close();
         return flag1;
     }
 }
